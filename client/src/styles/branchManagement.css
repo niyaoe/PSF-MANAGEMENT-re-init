@@ -5,6 +5,7 @@
 
 .branch-aero-page {
   width: 100%;
+  /* padding: 0px 24px 24px 24px; */
 }
 
 /* =========================================
@@ -114,7 +115,8 @@
 ========================================= */
 
 .branch-aero-panel {
-  margin-bottom: 20px;
+  margin: 0px 24px 24px 24px;
+  /* margin-bottom: 20px; */
   padding: 18px;
 
   background: linear-gradient(

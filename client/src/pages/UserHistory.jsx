@@ -273,7 +273,7 @@ const UserHistory = () => {
               <tr>
                 <th>Employee</th>
 
-                <th>Branches</th>
+                <th>Branch</th>
 
                 <th>Fresh Today</th>
 
@@ -301,7 +301,7 @@ const UserHistory = () => {
                   <tr key={employee.userId}>
                     <td>{employee.name}</td>
 
-                    <td>{employee.branches?.join(", ") || "-"}</td>
+                    <td>{employee.branch || "-"}</td>
 
                     <td>{employee.freshCallsToday}</td>
 

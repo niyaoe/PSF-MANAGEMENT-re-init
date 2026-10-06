@@ -1,6 +1,7 @@
 .excel-aero-page {
   width: 100%;
   min-height: 100%;
+  /* padding: 0px 24px 24px 24px; */
 }
 
 /* ================================
@@ -114,8 +115,10 @@
 ================================ */
 
 .excel-aero-panel {
-  width: 100%;
-  margin-bottom: 20px;
+  margin: 0px 24px 24px 24px;
+  /* width: 100%; */
+  
+  /* margin-bottom: 20px; */
   padding: 18px;
 
   background: linear-gradient(

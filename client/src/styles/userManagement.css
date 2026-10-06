@@ -5,6 +5,7 @@
 .user-aero-page {
   width: 100%;
   min-height: 100%;
+  padding: 0px 24px 24px 24px;
 }
 
 /* =========================================
@@ -128,7 +129,8 @@
 
 .user-aero-panel {
   width: 100%;
-
+  /* margin-left: 24px; */
+  /* margin-right: 24px; */
   margin-bottom: 20px;
   padding: 18px;
 
