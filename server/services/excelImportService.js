@@ -2,7 +2,7 @@ const XLSX = require("xlsx");
 const Branch = require("../models/Branch");
 const PSFRecord = require("../models/PSFRecord");
 
-const EXPECTED_HEADERS = [
+const OLD_EXPECTED_HEADERS = [
   "Sl",
   "Bill Date",
   "RO Number",
@@ -34,6 +34,19 @@ const EXPECTED_HEADERS = [
   "Call Date",
   "Complaint Status",
   "CRM/CXM Remarks",
+];
+
+const NEW_EXPECTED_HEADERS = [
+  "Bill Date",
+  "Dealer Location",
+  "Repair Order Number",
+  "Registration Number",
+  "Chassis Number",
+  "RO Service Advisor",
+  "Customer Name",
+  "Revisit Indicator",
+  "Product Name",
+  "Service Type",
 ];
 
 const mapExcelRow = (row) => {
@@ -106,15 +119,44 @@ const mapExcelRow = (row) => {
   };
 };
 
+const mapNewExcelRow = (row) => {
+  return {
+    billDate: row["Bill Date"] || null,
+
+    // Dealer location will be converted to branchId later.
+    branchName: String(row["Dealer Location"] || "").trim(),
+
+    roNumber: String(row["Repair Order Number"] || "").trim(),
+
+    registrationNumber: String(row["Registration Number"] || "").trim(),
+
+    chassisNumber: String(row["Chassis Number"] || "").trim(),
+
+    serviceAdvisorName: String(row["RO Service Advisor"] || "").trim(),
+
+    customerName: String(row["Customer Name"] || "").trim(),
+
+    revisit: String(row["Revisit Indicator"] || "").trim(),
+
+    model: String(row["Product Name"] || "").trim(),
+
+    serviceType: String(row["Service Type"] || "").trim(),
+  };
+};
+
 const importPSFExcel = async (filePath) => {
   const workbook = XLSX.readFile(filePath, {
     cellDates: true,
   });
 
-  const sheetName = "Main-data";
+  const preferredSheetNames = ["Main-data", "Service_Bill_Status_Report1"];
 
-  if (!workbook.Sheets[sheetName]) {
-    throw new Error(`Sheet "${sheetName}" not found`);
+  const sheetName = preferredSheetNames.find((name) => workbook.Sheets[name]);
+
+  if (!sheetName) {
+    throw new Error(
+      `No supported Excel sheet found. Available sheets: ${workbook.SheetNames.join(", ")}`,
+    );
   }
 
   const worksheet = workbook.Sheets[sheetName];
@@ -129,19 +171,35 @@ const importPSFExcel = async (filePath) => {
 
   const actualHeaders = Object.keys(rows[0]);
 
-  const missingHeaders = EXPECTED_HEADERS.filter(
-    (header) => !actualHeaders.includes(header),
+  const isOldFormat = OLD_EXPECTED_HEADERS.every((header) =>
+    actualHeaders.includes(header),
   );
 
-  if (missingHeaders.length > 0) {
-    throw new Error(`Missing Excel headers: ${missingHeaders.join(", ")}`);
+  const isNewFormat = NEW_EXPECTED_HEADERS.every((header) =>
+    actualHeaders.includes(header),
+  );
+
+  if (!isOldFormat && !isNewFormat) {
+    throw new Error(
+      "Excel format not recognized. Please upload a valid PSF Excel file.",
+    );
   }
 
-  const mappedRows = rows
-    .filter((row) => {
-      return String(row["Branch"] || "").trim() !== "";
-    })
-    .map(mapExcelRow);
+  let mappedRows;
+
+  if (isOldFormat) {
+    mappedRows = rows
+      .filter((row) => {
+        return String(row["Branch"] || "").trim() !== "";
+      })
+      .map(mapExcelRow);
+  } else {
+    mappedRows = rows
+      .filter((row) => {
+        return String(row["Dealer Location"] || "").trim() !== "";
+      })
+      .map(mapNewExcelRow);
+  }
 
   const branches = await Branch.find({
     isActive: true,
@@ -155,17 +213,36 @@ const importPSFExcel = async (filePath) => {
 
   // Excel branch aliases.
   // Different Excel names can represent the same actual branch.
+
   const branchAliases = {
-    kunnamkulam_sz: "kunnamkulam",
     kunnamkulam_: "kunnamkulam",
-    kunnamkulam: "kunnamkulam",
+    
+    chittur_sz: "chittur",
+
+    kasargod_madb: "kasaragod",
 
     koratty_sz: "koratty",
-    koratty_: "koratty",
-    koratty: "koratty",
+
+    kunnamkulam_sz: "kunnamkulam",
+
+    mananthavady: "mananthavady",
+
+    "mundur palakkad": "mundur",
+
+    pattambi: "pattambi",
+
+    pooladikunnu_sz: "pooladikunnu",
+
+    puthanathani: "puthanathani",
 
     thrissur: "thrissur",
-  };
+
+    wayanad: "wayanad",
+
+    calicut: "calicut",
+
+    kannur: "kannur",
+};
 
   const rowsWithBranchId = mappedRows.map((row, index) => {
     const normalizedBranchName = row.branchName.trim().toLowerCase();
@@ -189,6 +266,32 @@ const importPSFExcel = async (filePath) => {
 
   const operations = rowsWithBranchId.map((row) => {
     const { branchName, ...record } = row;
+
+    if (isNewFormat) {
+      return {
+        updateOne: {
+          filter: {
+            branchId: record.branchId,
+            roNumber: record.roNumber,
+          },
+          update: {
+            $set: {
+              billDate: record.billDate,
+              branchId: record.branchId,
+              roNumber: record.roNumber,
+              registrationNumber: record.registrationNumber,
+              chassisNumber: record.chassisNumber,
+              serviceAdvisorName: record.serviceAdvisorName,
+              customerName: record.customerName,
+              revisit: record.revisit,
+              model: record.model,
+              serviceType: record.serviceType,
+            },
+          },
+          upsert: true,
+        },
+      };
+    }
 
     return {
       updateOne: {
