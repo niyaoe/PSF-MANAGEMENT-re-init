@@ -1,0 +1,624 @@
+/* =========================================
+   USER MANAGEMENT PAGE
+========================================= */
+
+.user-aero-page {
+  width: 100%;
+  min-height: 100%;
+}
+
+/* =========================================
+   PAGE HEADER
+========================================= */
+
+.user-aero-header {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+  min-height: 78px;
+
+  margin-bottom: 20px;
+  padding: 12px 18px 12px 105px;
+
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.97),
+    rgba(218, 235, 248, 0.95)
+  );
+
+  border: 1px solid #86a8c3;
+  border-radius: 6px;
+
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 2px 6px rgba(31, 67, 95, 0.18);
+}
+
+/* =========================================
+   BACK BUTTON
+========================================= */
+
+.user-aero-back-button {
+  position: absolute;
+
+  left: 18px;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 60px;
+  height: 34px;
+
+  padding: 5px 10px;
+
+  color: #163b59;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  background: linear-gradient(to bottom, #ffffff 0%, #e8f3fb 45%, #c6ddec 100%);
+
+  border: 1px solid #7d9db8;
+  border-radius: 50px;
+
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 1px 2px rgba(0, 0, 0, 0.18);
+
+  text-shadow: 0 1px 0 #ffffff;
+
+  cursor: pointer;
+}
+
+.user-aero-back-button:hover {
+  background: linear-gradient(to bottom, #ffffff 0%, #edf8ff 45%, #d0e8f8 100%);
+}
+
+.user-aero-back-button:active {
+  background: linear-gradient(to bottom, #c3dbea, #e9f5fc);
+
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.15);
+}
+
+/* =========================================
+   HEADER CONTENT
+========================================= */
+
+.user-aero-header-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  width: 100%;
+}
+
+.user-aero-title {
+  margin: 0;
+
+  color: #174d7b;
+
+  font-size: 26px;
+  font-weight: 600;
+
+  line-height: 1.2;
+
+  text-shadow: 0 1px 0 #ffffff;
+}
+
+.user-aero-subtitle {
+  margin: 5px 0 0;
+
+  color: #5a7184;
+
+  font-size: 13px;
+
+  /* line-height: 1.3; */
+}
+
+/* =========================================
+   GENERAL PANEL
+========================================= */
+
+.user-aero-panel {
+  width: 100%;
+
+  margin-bottom: 20px;
+  padding: 18px;
+
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.97),
+    rgba(220, 237, 248, 0.96)
+  );
+
+  border: 1px solid #86a8c3;
+  border-radius: 6px;
+
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 2px 6px rgba(31, 67, 95, 0.18);
+}
+/* Excel Import
+Import PSF records from an Excel file */
+.user-aero-panel-title {
+  margin: 0 0 16px;
+
+  color: #174d7b;
+  font-size: 17px;
+  font-weight: 600;
+
+  text-shadow: 0 1px 0 #ffffff;
+}
+
+/* =========================================
+   CREATE USER FORM
+========================================= */
+
+.user-aero-create-form {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1fr);
+
+  gap: 16px 24px;
+
+  width: 100%;
+}
+
+.user-aero-form-group {
+  width: 100%;
+}
+
+.user-aero-form-group label {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #31536d;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.user-aero-form-group input,
+.user-aero-form-group select {
+  display: block;
+
+  width: 100%;
+
+  padding: 7px 9px;
+
+  color: #1d3447;
+
+  background: #ffffff;
+
+  border: 1px solid #8aa6bd;
+  border-radius: 3px;
+
+  outline: none;
+
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12);
+}
+
+.user-aero-form-group input:focus,
+.user-aero-form-group select:focus {
+  border-color: #4b91c9;
+
+  box-shadow:
+    0 0 4px rgba(65, 145, 205, 0.45),
+    inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Branch multi-select */
+
+.user-aero-branch-group {
+  grid-column: 1 / -1;
+}
+
+.user-aero-branch-select {
+  min-height: 120px;
+}
+
+/* Help text */
+
+.user-aero-help {
+  margin: 5px 0 0;
+
+  color: #5a7184;
+
+  font-size: 12px;
+}
+
+/* Create button */
+
+.user-aero-create-button {
+  grid-column: 1 / -1;
+
+  justify-self: start;
+
+  min-width: 120px;
+  height: 34px;
+
+  padding: 6px 16px;
+
+  color: #163b59;
+
+  background: linear-gradient(to bottom, #ffffff 0%, #e8f3fb 45%, #c6ddec 100%);
+
+  border: 1px solid #7d9db8;
+  border-radius: 4px;
+
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 1px 2px rgba(0, 0, 0, 0.18);
+
+  text-shadow: 0 1px 0 #ffffff;
+
+  cursor: pointer;
+}
+
+.user-aero-create-button:hover {
+  background: linear-gradient(to bottom, #ffffff 0%, #edf8ff 45%, #d0e8f8 100%);
+}
+
+.user-aero-create-button:active {
+  background: linear-gradient(to bottom, #c3dbea, #e9f5fc);
+
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.15);
+}
+
+.user-aero-create-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* =========================================
+   MESSAGE
+========================================= */
+
+.user-aero-message {
+  margin: 0 0 20px;
+
+  padding: 9px 12px;
+
+  color: #284961;
+
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.96),
+    rgba(226, 240, 250, 0.95)
+  );
+
+  border: 1px solid #9ab8cf;
+  border-radius: 4px;
+
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 1px 3px rgba(31, 67, 95, 0.12);
+}
+
+/* =========================================
+   USER TABLE
+========================================= */
+
+.user-aero-table-wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+
+  margin-top: 10px;
+
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.96),
+    rgba(232, 243, 251, 0.96)
+  );
+
+  border: 1px solid #86a8c3;
+  border-radius: 6px;
+
+  box-shadow:
+    0 2px 6px rgba(31, 67, 95, 0.2),
+    inset 0 1px 0 #ffffff;
+}
+
+.user-aero-table {
+  width: 100%;
+
+  min-width: 900px;
+
+  border-collapse: separate;
+  border-spacing: 0;
+
+  color: #243d50;
+}
+
+.user-aero-table th {
+  padding: 9px 10px;
+
+  color: #174d7b;
+
+  font-weight: 600;
+  text-align: left;
+
+  white-space: nowrap;
+
+  background: linear-gradient(to bottom, #ffffff, #c9e0f2);
+
+  border-right: 1px solid #a4bfd3;
+  border-bottom: 1px solid #7f9fb7;
+
+  text-shadow: 0 1px 0 #ffffff;
+}
+
+.user-aero-table td {
+  padding: 8px 10px;
+
+  background: rgba(255, 255, 255, 0.88);
+
+  border-right: 1px solid #d0dee8;
+  border-bottom: 1px solid #d0dee8;
+
+  white-space: nowrap;
+}
+
+.user-aero-table tbody tr:nth-child(even) td {
+  background: rgba(239, 247, 253, 0.9);
+}
+
+.user-aero-table tbody tr:hover td {
+  background: #dceefa;
+}
+
+/* Edit Branches button */
+
+.user-aero-edit-button {
+  padding: 5px 10px;
+
+  color: #163b59;
+
+  background: linear-gradient(to bottom, #ffffff, #d0e5f4);
+
+  border: 1px solid #7d9db8;
+  border-radius: 3px;
+
+  box-shadow: inset 0 1px 0 #ffffff;
+
+  cursor: pointer;
+}
+
+.user-aero-edit-button:hover {
+  background: linear-gradient(to bottom, #ffffff, #c2def1);
+}
+
+/* =========================================
+   EDIT BRANCHES MODAL
+========================================= */
+
+.user-aero-modal-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(30, 60, 85, 0.42);
+
+  z-index: 1000;
+}
+
+.user-aero-modal {
+  width: 600px;
+  max-width: 95%;
+  max-height: 85vh;
+
+  overflow: hidden;
+
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.97),
+    rgba(224, 239, 249, 0.97)
+  );
+
+  border: 1px solid #7195b1;
+  border-radius: 7px;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 #ffffff;
+}
+
+/* Modal title bar */
+
+.user-aero-modal-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  height: 38px;
+
+  padding-left: 12px;
+
+  background: linear-gradient(to bottom, #dff3ff 0%, #a9d5f5 45%, #6fa9d6 100%);
+
+  border-bottom: 1px solid #5b86a7;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.user-aero-modal-title {
+  color: #123f64;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  text-shadow: 0 1px 0 #ffffff;
+}
+
+/* Close button */
+
+.user-aero-modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 46px;
+  height: 27px;
+
+  margin: 0 5px 0 0;
+  padding: 0;
+
+  color: #ffffff;
+
+  font-family: Arial, sans-serif;
+  font-size: 19px;
+  font-weight: bold;
+
+  background: linear-gradient(to bottom, #e98b8b 0%, #d95353 45%, #b82f2f 100%);
+
+  border: 1px solid #8f2828;
+  border-radius: 0 0 4px 4px;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    0 1px 2px rgba(0, 0, 0, 0.2);
+
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.45);
+
+  cursor: pointer;
+}
+
+.user-aero-modal-close:hover {
+  background: linear-gradient(to bottom, #ffb0b0 0%, #ee6868 45%, #c83838 100%);
+}
+
+.user-aero-modal-close:active {
+  background: linear-gradient(to bottom, #b72f2f, #e05b5b);
+}
+
+/* Modal content */
+
+.user-aero-modal-content {
+  max-height: calc(85vh - 38px);
+
+  overflow-y: auto;
+
+  padding: 22px;
+}
+
+.user-aero-modal-content h2 {
+  margin-top: 0;
+
+  color: #174d7b;
+
+  text-shadow: 0 1px 0 #ffffff;
+}
+
+.user-aero-modal-content p {
+  color: #31536d;
+}
+
+/* Modal select */
+
+.user-aero-modal-select {
+  width: 100%;
+
+  min-height: 140px;
+
+  padding: 7px 9px;
+
+  color: #1d3447;
+
+  background: #ffffff;
+
+  border: 1px solid #8aa6bd;
+  border-radius: 3px;
+
+  outline: none;
+
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12);
+}
+
+.user-aero-modal-select:focus {
+  border-color: #4b91c9;
+
+  box-shadow:
+    0 0 4px rgba(65, 145, 205, 0.45),
+    inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Modal actions */
+
+.user-aero-modal-actions {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  margin-top: 12px;
+}
+
+.user-aero-modal-button {
+  min-width: 110px;
+  height: 34px;
+
+  padding: 6px 14px;
+
+  color: #163b59;
+
+  background: linear-gradient(to bottom, #ffffff, #d0e5f4);
+
+  border: 1px solid #7d9db8;
+  border-radius: 4px;
+
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 1px 2px rgba(0, 0, 0, 0.18);
+
+  cursor: pointer;
+}
+
+.user-aero-modal-button:hover {
+  background: linear-gradient(to bottom, #ffffff, #c2def1);
+}
+
+.user-aero-modal-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 750px) {
+  .user-aero-create-form {
+    grid-template-columns: 1fr;
+  }
+
+  .user-aero-branch-group {
+    grid-column: auto;
+  }
+
+  .user-aero-create-button {
+    grid-column: auto;
+  }
+
+  .user-aero-header {
+    padding-left: 105px;
+  }
+}

@@ -1,0 +1,278 @@
+/* =========================================
+   LOGIN PAGE
+   Windows 7 Aero Style
+========================================= */
+
+.login-aero-page {
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 30px;
+
+    box-sizing: border-box;
+
+    background:
+        linear-gradient(
+            135deg,
+            #dceef9 0%,
+            #b9d9ec 45%,
+            #dcecf7 100%
+        );
+}
+
+
+/* =========================================
+   Logo
+========================================= */
+
+.login-aero-logo {
+    width: 100px;
+    height: 50px;
+
+    object-fit: contain;
+
+    /* margin-bottom: 12px; */
+
+    filter:
+        drop-shadow(
+            0 2px 3px rgba(31, 67, 95, 0.25)
+        );
+}
+
+
+/* =========================================
+   Title
+========================================= */
+
+.login-aero-title {
+    margin: 0 0 20px;
+
+    color: #174d7b;
+
+    font-size: 26px;
+    font-weight: 600;
+
+    text-align: center;
+
+    text-shadow:
+        0 1px 0 #ffffff;
+}
+
+
+/* =========================================
+   Login Panel
+========================================= */
+
+.login-aero-panel {
+    width: 380px;
+    max-width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 28px 30px;
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0.97),
+            rgba(224, 239, 249, 0.97)
+        );
+
+    border: 1px solid #86a8c3;
+    border-radius: 7px;
+
+    box-shadow:
+        inset 0 1px 0 #ffffff,
+        0 8px 25px rgba(31, 67, 95, 0.25);
+}
+
+
+/* =========================================
+   Form Group
+========================================= */
+
+.login-aero-form-group {
+    margin-bottom: 16px;
+}
+
+.login-aero-form-group label {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: #31536d;
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+/* =========================================
+   Inputs
+========================================= */
+
+.login-aero-input {
+    width: 100%;
+
+    height: 38px;
+
+    box-sizing: border-box;
+
+    padding: 7px 10px;
+
+    color: #1d3447;
+
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 14px;
+
+    background: #ffffff;
+
+    border: 1px solid #8aa6bd;
+    border-radius: 3px;
+
+    outline: none;
+
+    box-shadow:
+        inset 0 1px 2px rgba(0, 0, 0, 0.12);
+}
+
+.login-aero-input:focus {
+    border-color: #4b91c9;
+
+    box-shadow:
+        0 0 5px rgba(65, 145, 205, 0.45),
+        inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+
+/* =========================================
+   Login Button
+========================================= */
+
+.login-aero-button {
+    width: 100%;
+
+    height: 38px;
+
+    margin-top: 5px;
+
+    color: #174d7b;
+
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+
+    background:
+        linear-gradient(
+            to bottom,
+            #ffffff 0%,
+            #e5f2fb 45%,
+            #bddbf0 100%
+        );
+
+    border: 1px solid #7fa4bf;
+    border-radius: 4px;
+
+    box-shadow:
+        inset 0 1px 0 #ffffff,
+        0 1px 3px rgba(31, 67, 95, 0.2);
+
+    cursor: pointer;
+
+    text-shadow:
+        0 1px 0 #ffffff;
+}
+
+.login-aero-button:hover {
+    background:
+        linear-gradient(
+            to bottom,
+            #ffffff 0%,
+            #dff1fc 45%,
+            #a9d2ed 100%
+        );
+}
+
+.login-aero-button:active {
+    background:
+        linear-gradient(
+            to bottom,
+            #b7d7ec,
+            #dcecf7
+        );
+}
+
+.login-aero-button:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================================
+   Message
+========================================= */
+
+.login-aero-message {
+    width: 380px;
+    max-width: 100%;
+
+    box-sizing: border-box;
+
+    margin: 15px 0 0;
+
+    padding: 9px 12px;
+
+    color: #31536d;
+
+    font-size: 13px;
+
+    text-align: center;
+
+    background:
+        rgba(230, 242, 251, 0.95);
+
+    border: 1px solid #9bb9ce;
+    border-radius: 4px;
+
+    box-shadow:
+        inset 0 1px 0 #ffffff;
+}
+
+
+/* =========================================
+   Mobile
+========================================= */
+
+@media (max-width: 500px) {
+
+    .login-aero-page {
+        padding: 20px;
+    }
+
+    .login-aero-logo {
+        width: 70px;
+        height: 70px;
+    }
+
+    .login-aero-title {
+        font-size: 24px;
+    }
+
+    .login-aero-panel {
+        padding: 22px;
+    }
+}
+
+
+.login-title-content{
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+    
+}

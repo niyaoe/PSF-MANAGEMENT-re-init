@@ -1,0 +1,465 @@
+.user-history-page {
+    width: 100%;
+    min-height: 100%;
+    box-sizing: border-box;
+}
+
+/* ================================
+   Header
+================================ */
+
+.user-history-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.user-history-header-content {
+    min-width: 0;
+}
+
+.user-history-title {
+    margin: 0;
+    color: #1d3447;
+    font-size: 25px;
+    font-weight: 600;
+    text-shadow: 0 1px 0 #ffffff;
+}
+
+.user-history-subtitle {
+    margin: 3px 0 0;
+    color: #587086;
+    font-size: 13px;
+}
+
+/* ================================
+   Back Button
+================================ */
+
+.user-history-back-button {
+    min-width: 80px;
+    height: 32px;
+    padding: 5px 12px;
+
+    color: #1d3447;
+
+    background:
+        linear-gradient(
+            to bottom,
+            #ffffff 0%,
+            #eef6fc 45%,
+            #d5e8f5 50%,
+            #c2dced 100%
+        );
+
+    border: 1px solid #7f9db9;
+    border-radius: 4px;
+
+    box-shadow:
+        inset 0 1px 0 #ffffff,
+        0 1px 2px rgba(0, 0, 0, 0.15);
+
+    cursor: pointer;
+}
+
+.user-history-back-button:hover {
+    background:
+        linear-gradient(
+            to bottom,
+            #ffffff 0%,
+            #f4faff 45%,
+            #dceefa 50%,
+            #cbe2f1 100%
+        );
+}
+
+.user-history-back-button:active {
+    background:
+        linear-gradient(
+            to bottom,
+            #c5ddea,
+            #e7f3fa
+        );
+
+    box-shadow:
+        inset 0 1px 3px rgba(0, 0, 0, 0.18);
+}
+
+/* ================================
+   Error
+================================ */
+
+.user-history-error {
+    margin-bottom: 15px;
+    padding: 10px 14px;
+
+    color: #8b1e1e;
+
+    background: #fff1f1;
+
+    border: 1px solid #d99a9a;
+    border-radius: 4px;
+}
+
+/* ================================
+   Filter Panel
+================================ */
+
+.user-history-filter-panel {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+
+    margin-bottom: 18px;
+    padding: 14px;
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0.96),
+            rgba(222, 238, 249, 0.96)
+        );
+
+    border: 1px solid #86a8c3;
+    border-radius: 5px;
+
+    box-shadow:
+        inset 0 1px 0 #ffffff,
+        0 2px 5px rgba(31, 67, 95, 0.14);
+}
+
+.user-history-filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.user-history-filter-group label {
+    color: #31536d;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.user-history-filter-group input {
+    width: 170px;
+    height: 34px;
+    box-sizing: border-box;
+    padding: 6px 9px;
+
+    color: #1d3447;
+
+    background: #ffffff;
+
+    border: 1px solid #8aa6bd;
+    border-radius: 3px;
+
+    outline: none;
+
+    box-shadow:
+        inset 0 1px 2px rgba(0, 0, 0, 0.12);
+}
+
+.user-history-filter-group input:focus {
+    border-color: #4b91c9;
+
+    box-shadow:
+        0 0 4px rgba(65, 145, 205, 0.45),
+        inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.user-history-filter-group select {
+    width: 190px;
+    height: 34px;
+    box-sizing: border-box;
+    padding: 6px 9px;
+
+    color: #1d3447;
+
+    background: #ffffff;
+
+    border: 1px solid #8aa6bd;
+    border-radius: 3px;
+
+    outline: none;
+
+    box-shadow:
+        inset 0 1px 2px rgba(0, 0, 0, 0.12);
+}
+
+.user-history-filter-group select:focus {
+    border-color: #4b91c9;
+
+    box-shadow:
+        0 0 4px rgba(65, 145, 205, 0.45),
+        inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* ================================
+   Filter Buttons
+================================ */
+
+.user-history-filter-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.user-history-button {
+    min-width: 105px;
+    height: 34px;
+    padding: 5px 12px;
+
+    color: #1d3447;
+
+    background:
+        linear-gradient(
+            to bottom,
+            #ffffff 0%,
+            #eef6fc 45%,
+            #d5e8f5 50%,
+            #c2dced 100%
+        );
+
+    border: 1px solid #7f9db9;
+    border-radius: 4px;
+
+    box-shadow:
+        inset 0 1px 0 #ffffff,
+        0 1px 2px rgba(0, 0, 0, 0.15);
+
+    cursor: pointer;
+}
+
+.user-history-button:hover {
+    background:
+        linear-gradient(
+            to bottom,
+            #ffffff 0%,
+            #f4faff 45%,
+            #dceefa 50%,
+            #cbe2f1 100%
+        );
+}
+
+.user-history-button:active {
+    background:
+        linear-gradient(
+            to bottom,
+            #c5ddea,
+            #e7f3fa
+        );
+
+    box-shadow:
+        inset 0 1px 3px rgba(0, 0, 0, 0.18);
+}
+
+/* ================================
+   Summary Cards
+================================ */
+
+.user-history-summary-grid {
+    display: flex;
+    width: 100%;
+    gap: 12px;
+
+    margin-bottom: 20px;
+}
+
+.user-history-summary-card {
+    flex: 1;
+    min-width: 0;
+
+    padding: 11px 16px;
+
+    text-align: center;
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0.96),
+            rgba(214, 233, 247, 0.94)
+        );
+
+    border: 1px solid #86a8c3;
+    border-radius: 5px;
+
+    box-shadow:
+        inset 0 1px 0 #ffffff,
+        0 2px 4px rgba(31, 67, 95, 0.16);
+}
+
+.user-history-summary-title {
+    margin-bottom: 3px;
+
+    color: #31536d;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.user-history-summary-value {
+    color: #174d7b;
+
+    font-size: 22px;
+    font-weight: 600;
+
+    text-shadow: 0 1px 0 #ffffff;
+}
+
+/* ================================
+   Table Panel
+================================ */
+
+.user-history-table-panel {
+    width: 100%;
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0.96),
+            rgba(222, 238, 249, 0.96)
+        );
+
+    border: 1px solid #86a8c3;
+    border-radius: 5px;
+
+    box-shadow:
+        inset 0 1px 0 #ffffff,
+        0 2px 5px rgba(31, 67, 95, 0.14);
+
+    overflow: hidden;
+}
+
+.user-history-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.user-history-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    color: #263f52;
+    font-size: 13px;
+}
+
+.user-history-table th {
+    padding: 10px 12px;
+
+    color: #24465f;
+    font-weight: 600;
+    text-align: left;
+
+    background:
+        linear-gradient(
+            to bottom,
+            #f7fbfe,
+            #d8eaf6
+        );
+
+    border-bottom: 1px solid #86a8c3;
+    border-right: 1px solid #b4ccdc;
+
+    white-space: nowrap;
+}
+
+.user-history-table th:last-child {
+    border-right: none;
+}
+
+.user-history-table td {
+    padding: 9px 12px;
+
+    background: rgba(255, 255, 255, 0.88);
+
+    border-bottom: 1px solid #d0dfe9;
+    border-right: 1px solid #d9e5ed;
+}
+
+.user-history-table td:last-child {
+    border-right: none;
+}
+
+.user-history-table tbody tr:hover td {
+    background: #edf7fd;
+}
+
+.user-history-empty {
+    padding: 25px !important;
+
+    color: #607789;
+
+    text-align: center;
+}
+
+/* ================================
+   Loading
+================================ */
+
+.user-history-loading {
+    min-height: 300px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #174d7b;
+
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* ================================
+   Responsive
+================================ */
+
+@media (max-width: 900px) {
+    .user-history-filter-panel {
+        flex-wrap: wrap;
+        align-items: flex-end;
+    }
+
+    .user-history-summary-grid {
+        flex-wrap: wrap;
+    }
+
+    .user-history-summary-card {
+        flex: 1 1 calc(50% - 12px);
+    }
+}
+
+@media (max-width: 600px) {
+    .user-history-header {
+        align-items: flex-start;
+    }
+
+    .user-history-title {
+        font-size: 21px;
+    }
+
+    .user-history-filter-panel {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .user-history-filter-group input {
+        width: 100%;
+    }
+
+    .user-history-filter-actions {
+        width: 100%;
+    }
+
+    .user-history-button {
+        flex: 1;
+    }
+
+    .user-history-summary-card {
+        flex: 1 1 100%;
+    }
+    .user-history-filter-group select {
+    width: 100%;
+}
+}
+
