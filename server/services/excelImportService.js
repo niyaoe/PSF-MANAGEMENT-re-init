@@ -196,7 +196,13 @@ const importPSFExcel = async (filePath) => {
   } else {
     mappedRows = rows
       .filter((row) => {
-        return String(row["Dealer Location"] || "").trim() !== "";
+        const dealerLocation = String(row["Dealer Location"] || "").trim();
+
+        const status = String(row["Status"] || "")
+          .trim()
+          .toLowerCase();
+
+        return dealerLocation !== "" && status === "invoiced";
       })
       .map(mapNewExcelRow);
   }
@@ -216,7 +222,7 @@ const importPSFExcel = async (filePath) => {
 
   const branchAliases = {
     kunnamkulam_: "kunnamkulam",
-    
+
     chittur_sz: "chittur",
 
     kasargod_madb: "kasaragod",
@@ -242,7 +248,7 @@ const importPSFExcel = async (filePath) => {
     calicut: "calicut",
 
     kannur: "kannur",
-};
+  };
 
   const rowsWithBranchId = mappedRows.map((row, index) => {
     const normalizedBranchName = row.branchName.trim().toLowerCase();
