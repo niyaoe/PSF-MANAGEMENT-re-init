@@ -30,15 +30,14 @@ const PSFTable = ({ records, onSelectRecord, page, limit }) => {
 
         <tbody>
           {records.map((record, index) => (
-            <tr key={record._id}>
+            <tr
+              key={record._id}
+              onClick={() => {
+                onSelectRecord(record);
+              }}
+            >
               <td>{(page - 1) * limit + index + 1}</td>
-              <td
-                onClick={() => {
-                  onSelectRecord(record);
-                }}
-              >
-                {record.roNumber}
-              </td>
+              <td>{record.roNumber}</td>
               <td>
                 {record.billDate
                   ? new Date(record.billDate).toLocaleDateString()
