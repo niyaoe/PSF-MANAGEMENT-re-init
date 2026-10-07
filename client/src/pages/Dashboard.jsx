@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
+import logo from "../../public/logo.png";
 import DashboardLayout from "../components/DashboardLayout";
 import SummaryCard from "../components/SummaryCard";
 import DashboardFilters from "../components/DashboardFilters";
@@ -142,7 +143,9 @@ const Dashboard = () => {
   if (loading) {
     return (
       <div className="eram-loading-screen">
-        <div className="eram-spinner">ERAM</div>
+        <div className="eram-spinner">
+          <img src={logo} alt="logo" className="eram-loading-logo"  />
+        </div>
       </div>
     );
   }
