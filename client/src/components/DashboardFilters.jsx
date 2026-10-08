@@ -76,7 +76,7 @@ const DashboardFilters = ({
         >
           <option value="">All</option>
 
-          <option value="true">Not Connected</option>
+          <option value="true">Pending</option>
 
           <option value="false">Connected</option>
         </select>

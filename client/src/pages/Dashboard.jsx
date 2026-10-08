@@ -196,7 +196,7 @@ const Dashboard = () => {
           value={summary.closedComplaints}
         />
 
-        <SummaryCard title="Not Connected" value={summary.notConnected} />
+        <SummaryCard title="Pending" value={summary.notConnected} />
         <SummaryCard title="Connected" value={summary.connected} />
       </div>
 
