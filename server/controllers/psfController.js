@@ -363,13 +363,34 @@ const getPSFDashboard = async (req, res) => {
             },
           ],
         },
+        {
+          $or: [
+            {
+              voc: {
+                $exists: false,
+              },
+            },
+            {
+              voc: null,
+            },
+            {
+              voc: "",
+            },
+          ],
+        },
       ];
     }
 
     if (notConnected === "false") {
-      filter.$and = [
+      filter.$or = [
         {
           firstCallDate: {
+            $exists: true,
+            $nin: [null, ""],
+          },
+        },
+        {
+          voc: {
             $exists: true,
             $nin: [null, ""],
           },
@@ -421,7 +442,7 @@ const getPSFDashboard = async (req, res) => {
     // const totalRecords = records.length;
 
     const summaryRecords = await PSFRecord.find(filter).select(
-      "complaintStatus firstCallDate",
+      "complaintStatus firstCallDate voc",
     );
 
     const openComplaints = summaryRecords.filter((record) => {
@@ -434,9 +455,13 @@ const getPSFDashboard = async (req, res) => {
       (record) => record.complaintStatus?.trim().toLowerCase() === "closed",
     ).length;
 
-    const notConnectedRecords = summaryRecords.filter(
-      (record) => !record.firstCallDate,
-    ).length;
+    const notConnectedRecords = summaryRecords.filter((record) => {
+      const firstCallEmpty = !record.firstCallDate;
+
+      const vocEmpty = !record.voc?.trim();
+
+      return firstCallEmpty && vocEmpty;
+    }).length;
 
     const connectedRecords = totalRecords - notConnectedRecords;
 
@@ -480,9 +505,7 @@ const getUserHistory = async (req, res) => {
      * Selected date
      */
 
-    const selectedDate = date
-      ? new Date(date)
-      : new Date();
+    const selectedDate = date ? new Date(date) : new Date();
 
     if (isNaN(selectedDate.getTime())) {
       return res.status(400).json({
@@ -551,21 +574,15 @@ const getUserHistory = async (req, res) => {
 
         userFilter.branchIds = branchId;
       }
-    }
-
-    /*
-     * Employee
-     */
-
-    else if (req.user.role === "employee") {
+    } else if (req.user.role === "employee") {
+      /*
+       * Employee
+       */0
       userFilter._id = req.user.userId;
-    }
-
-    /*
-     * Manager
-     */
-
-    else if (req.user.role === "manager") {
+    } else if (req.user.role === "manager") {
+      /*
+       * Manager
+       */
       if (
         !Array.isArray(req.user.branchIds) ||
         req.user.branchIds.length === 0
@@ -592,9 +609,7 @@ const getUserHistory = async (req, res) => {
      * Get employee IDs
      */
 
-    const userIds = users.map(
-      (user) => user._id,
-    );
+    const userIds = users.map((user) => user._id);
 
     /*
      * PSF record filter
@@ -612,10 +627,7 @@ const getUserHistory = async (req, res) => {
      * This filters the actual PSF records too.
      */
 
-    if (
-      req.user.role === "admin" &&
-      branchId
-    ) {
+    if (req.user.role === "admin" && branchId) {
       psfFilter.branchId = branchId;
     }
 
@@ -641,9 +653,7 @@ const getUserHistory = async (req, res) => {
 
       if (employee) {
         psfFilter.branchId = {
-          $in: employee.branchIds.map(
-            (branch) => branch._id,
-          ),
+          $in: employee.branchIds.map((branch) => branch._id),
         };
       }
     }
@@ -695,15 +705,13 @@ const getUserHistory = async (req, res) => {
           req.user.role === "manager" &&
           !req.user.branchIds.some(
             (assignedBranchId) =>
-              assignedBranchId.toString() ===
-              branch._id.toString(),
+              assignedBranchId.toString() === branch._id.toString(),
           )
         ) {
           return;
         }
 
-        const key =
-          `${user._id.toString()}_${branch._id.toString()}`;
+        const key = `${user._id.toString()}_${branch._id.toString()}`;
 
         historyMap[key] = {
           userId: user._id,
@@ -732,8 +740,7 @@ const getUserHistory = async (req, res) => {
         return;
       }
 
-      const key =
-        `${record.callBy.toString()}_${record.branchId._id.toString()}`;
+      const key = `${record.callBy.toString()}_${record.branchId._id.toString()}`;
 
       /*
        * Safety check
@@ -750,18 +757,13 @@ const getUserHistory = async (req, res) => {
        */
 
       if (record.firstCallDate) {
-        const freshDate = new Date(
-          record.firstCallDate,
-        );
+        const freshDate = new Date(record.firstCallDate);
 
         /*
          * Selected date
          */
 
-        if (
-          freshDate >= selectedDayStart &&
-          freshDate < selectedDayEnd
-        ) {
+        if (freshDate >= selectedDayStart && freshDate < selectedDayEnd) {
           historyRow.freshCallsToday++;
         }
 
@@ -769,10 +771,7 @@ const getUserHistory = async (req, res) => {
          * Selected month
          */
 
-        if (
-          freshDate >= monthStart &&
-          freshDate < nextMonthStart
-        ) {
+        if (freshDate >= monthStart && freshDate < nextMonthStart) {
           historyRow.freshCallsThisMonth++;
         }
       }
@@ -791,9 +790,7 @@ const getUserHistory = async (req, res) => {
           return;
         }
 
-        const followUpDateValue = new Date(
-          followUpDate,
-        );
+        const followUpDateValue = new Date(followUpDate);
 
         /*
          * Selected date
@@ -823,16 +820,11 @@ const getUserHistory = async (req, res) => {
      * Calculate totals
      */
 
-    const history = Object.values(
-      historyMap,
-    ).map((row) => {
-      row.totalCallsToday =
-        row.freshCallsToday +
-        row.followUpCallsToday;
+    const history = Object.values(historyMap).map((row) => {
+      row.totalCallsToday = row.freshCallsToday + row.followUpCallsToday;
 
       row.totalCallsThisMonth =
-        row.freshCallsThisMonth +
-        row.followUpCallsThisMonth;
+        row.freshCallsThisMonth + row.followUpCallsThisMonth;
 
       return row;
     });
@@ -853,23 +845,17 @@ const getUserHistory = async (req, res) => {
     };
 
     history.forEach((row) => {
-      summary.freshCallsToday +=
-        row.freshCallsToday;
+      summary.freshCallsToday += row.freshCallsToday;
 
-      summary.freshCallsThisMonth +=
-        row.freshCallsThisMonth;
+      summary.freshCallsThisMonth += row.freshCallsThisMonth;
 
-      summary.followUpCallsToday +=
-        row.followUpCallsToday;
+      summary.followUpCallsToday += row.followUpCallsToday;
 
-      summary.followUpCallsThisMonth +=
-        row.followUpCallsThisMonth;
+      summary.followUpCallsThisMonth += row.followUpCallsThisMonth;
 
-      summary.totalCallsToday +=
-        row.totalCallsToday;
+      summary.totalCallsToday += row.totalCallsToday;
 
-      summary.totalCallsThisMonth +=
-        row.totalCallsThisMonth;
+      summary.totalCallsThisMonth += row.totalCallsThisMonth;
     });
 
     /*
@@ -886,10 +872,7 @@ const getUserHistory = async (req, res) => {
       history,
     });
   } catch (error) {
-    console.error(
-      "Get user history error:",
-      error,
-    );
+    console.error("Get user history error:", error);
 
     res.status(500).json({
       message: "Server error",
