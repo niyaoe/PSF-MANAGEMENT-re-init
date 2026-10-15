@@ -363,34 +363,13 @@ const getPSFDashboard = async (req, res) => {
             },
           ],
         },
-        {
-          $or: [
-            {
-              voc: {
-                $exists: false,
-              },
-            },
-            {
-              voc: null,
-            },
-            {
-              voc: "",
-            },
-          ],
-        },
       ];
     }
 
     if (notConnected === "false") {
-      filter.$or = [
+      filter.$and = [
         {
           firstCallDate: {
-            $exists: true,
-            $nin: [null, ""],
-          },
-        },
-        {
-          voc: {
             $exists: true,
             $nin: [null, ""],
           },
@@ -442,7 +421,7 @@ const getPSFDashboard = async (req, res) => {
     // const totalRecords = records.length;
 
     const summaryRecords = await PSFRecord.find(filter).select(
-      "complaintStatus firstCallDate voc",
+      "complaintStatus firstCallDate",
     );
 
     const openComplaints = summaryRecords.filter((record) => {
@@ -455,13 +434,9 @@ const getPSFDashboard = async (req, res) => {
       (record) => record.complaintStatus?.trim().toLowerCase() === "closed",
     ).length;
 
-    const notConnectedRecords = summaryRecords.filter((record) => {
-      const firstCallEmpty = !record.firstCallDate;
-
-      const vocEmpty = !record.voc?.trim();
-
-      return firstCallEmpty && vocEmpty;
-    }).length;
+    const notConnectedRecords = summaryRecords.filter(
+      (record) => !record.firstCallDate,
+    ).length;
 
     const connectedRecords = totalRecords - notConnectedRecords;
 
@@ -495,7 +470,7 @@ const getPSFDashboard = async (req, res) => {
       message: "Server error",
     });
   }
-};
+}; 
 
 const getUserHistory = async (req, res) => {
   try {
