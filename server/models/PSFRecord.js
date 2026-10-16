@@ -138,7 +138,8 @@ const psfRecordSchema = new mongoose.Schema(
     },
 
     typeOfConcern: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "TypeOfConcern",
       default: null,
     },
 

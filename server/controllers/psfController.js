@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const PSFRecord = require("../models/PSFRecord");
+const TypeOfConcern = require("../models/TypeOfConcern");
 
 const getPSFRecords = async (req, res) => {
   try {
@@ -420,9 +421,9 @@ const getPSFDashboard = async (req, res) => {
 
     // const totalRecords = records.length;
 
-    const summaryRecords = await PSFRecord.find(filter).select(
-      "complaintStatus firstCallDate",
-    );
+    const summaryRecords = await PSFRecord.find(filter)
+      .select("complaintStatus firstCallDate typeOfConcern")
+      .populate("typeOfConcern", "name section");
 
     const openComplaints = summaryRecords.filter((record) => {
       const status = record.complaintStatus?.trim().toLowerCase();
@@ -470,7 +471,7 @@ const getPSFDashboard = async (req, res) => {
       message: "Server error",
     });
   }
-}; 
+};
 
 const getUserHistory = async (req, res) => {
   try {
@@ -552,7 +553,7 @@ const getUserHistory = async (req, res) => {
     } else if (req.user.role === "employee") {
       /*
        * Employee
-       */0
+       */ 0;
       userFilter._id = req.user.userId;
     } else if (req.user.role === "manager") {
       /*

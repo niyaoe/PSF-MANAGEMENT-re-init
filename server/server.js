@@ -9,6 +9,7 @@ const branchRoutes = require("./routes/branchRoutes");
 const userRoutes = require("./routes/userRoutes");
 const psfRoutes = require("./routes/psfRoutes");
 const importRoutes = require("./routes/importRoutes");
+const typeOfConcernRoutes = require("./routes/typeOfConcernRoutes");
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use("/api/branches", branchRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/psf", psfRoutes);
 app.use("/api/import", importRoutes);
+app.use("/api/type-of-concerns", typeOfConcernRoutes);
 
 app.get("/", (req, res) => {
     res.json({
