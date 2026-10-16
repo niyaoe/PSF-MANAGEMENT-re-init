@@ -1,0 +1,730 @@
+
+/* =========================================
+   WINDOWS 7 AERO — APPLICATION SHELL
+   File: src/components/DashboardLayout.css
+   ========================================= */
+
+.psfl-layout {
+  --psfl-sidebar-wide: 232px;
+  --psfl-sidebar-slim: 58px;
+  --psfl-glass-border: #7da9cf;
+  --psfl-blue-dark: #174f7b;
+  --psfl-blue: #3989c7;
+  --psfl-text: #28465f;
+
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  color: var(--psfl-text);
+  background: linear-gradient(135deg, #e9f4fc, #d5e8f7);
+  font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+  font-size: 12px;
+}
+
+.psfl-layout *,
+.psfl-layout *::before,
+.psfl-layout *::after {
+  box-sizing: border-box;
+}
+
+/* Sidebar */
+
+.psfl-sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  width: var(--psfl-sidebar-slim);
+  overflow: hidden;
+  border-right: 1px solid #648fb4;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.23),
+      transparent 14%,
+      transparent 86%,
+      rgba(255, 255, 255, 0.2)
+    ),
+    linear-gradient(
+      180deg,
+      #eaf7ff 0%,
+      #a9d2f1 13%,
+      #5c9ed0 42%,
+      #2671ac 75%,
+      #17568d 100%
+    );
+  box-shadow:
+    inset -1px 0 0 rgba(255, 255, 255, 0.7),
+    2px 0 10px rgba(28, 68, 103, 0.18);
+  transition: width 220ms ease;
+}
+
+.psfl-sidebar-expanded {
+  width: var(--psfl-sidebar-wide);
+}
+
+/* Glossy glass highlight */
+
+.psfl-sidebar::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 105px;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.45),
+    rgba(255, 255, 255, 0.12) 40%,
+    transparent
+  );
+  content: "";
+}
+
+/* Brand */
+
+.psfl-brand {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  min-height: 65px;
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(20, 77, 121, 0.35);
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.36);
+}
+
+.psfl-brand-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  border: 1px solid #ffffff;
+  border-radius: 8px;
+  color: #ffffff;
+  background: linear-gradient(
+    145deg,
+    #8dd8ff,
+    #2386ce 45%,
+    #07518f
+  );
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.9),
+    0 1px 4px rgba(12, 53, 88, 0.45);
+  font-size: 21px;
+  font-weight: 800;
+  text-shadow: 0 1px 2px #174d77;
+}
+
+.psfl-brand-copy,
+.psfl-user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.psfl-brand-copy strong {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  text-shadow: 0 1px 2px #235b85;
+}
+
+.psfl-brand-copy span {
+  color: #e5f5ff;
+  font-size: 10px;
+  text-shadow: 0 1px 1px #215982;
+}
+
+.psfl-close-menu {
+  display: none;
+}
+
+/* Workspace caption and pin */
+
+.psfl-sidebar-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  min-height: 38px;
+  padding: 5px 12px;
+}
+
+.psfl-nav-caption {
+  overflow: hidden;
+  color: #e6f5ff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  text-shadow: 0 1px 1px #205a86;
+}
+
+.psfl-pin-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 25px;
+  width: 25px;
+  height: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 4px;
+  color: #174f7b;
+  background: linear-gradient(#ffffff, #cce7fa 55%, #9cc9ec);
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 1px 2px rgba(15, 55, 89, 0.2);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.psfl-pin-button:hover,
+.psfl-pin-active {
+  border-color: #ffffff;
+  background: linear-gradient(#ffffff, #e0f3ff 45%, #80bce9);
+}
+
+/* Navigation */
+
+.psfl-navigation {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 0;
+  padding: 5px 7px 12px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.psfl-nav-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  min-height: 42px;
+  padding: 7px 9px;
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  color: #ffffff;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  text-shadow: 0 1px 1px rgba(15, 57, 91, 0.7);
+  transition:
+    background 150ms ease,
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.psfl-nav-link:hover {
+  border-color: rgba(255, 255, 255, 0.65);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.5),
+    rgba(223, 244, 255, 0.19) 45%,
+    rgba(16, 91, 150, 0.18)
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    0 0 5px rgba(255, 255, 255, 0.2);
+}
+
+.psfl-nav-link-active {
+  border-color: #ffffff;
+  color: #143f61;
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #e8f7ff 28%,
+    #c0e5ff 58%,
+    #83c2ef 100%
+  );
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    inset 0 -1px 0 rgba(65, 137, 190, 0.25),
+    0 1px 4px rgba(12, 59, 99, 0.28);
+  text-shadow: 0 1px 0 #ffffff;
+}
+
+.psfl-nav-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 29px;
+  width: 29px;
+  height: 29px;
+  border: 1px solid rgba(255, 255, 255, 0.56);
+  border-radius: 5px;
+  color: #ffffff;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.32),
+    rgba(17, 81, 133, 0.2)
+  );
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  font-size: 17px;
+  line-height: 1;
+}
+
+.psfl-nav-link-active .psfl-nav-icon {
+  border-color: #8dbde0;
+  color: #155c91;
+  background: linear-gradient(#ffffff, #d6efff 55%, #a5d5f6);
+  box-shadow: inset 0 1px 0 #ffffff;
+}
+
+.psfl-nav-label {
+  overflow: hidden;
+  opacity: 1;
+  transition: opacity 120ms ease;
+}
+
+/* Bottom user and logout */
+
+.psfl-sidebar-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 9px 7px 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.48);
+  background: linear-gradient(
+    180deg,
+    rgba(15, 77, 127, 0.08),
+    rgba(8, 57, 100, 0.27)
+  );
+}
+
+.psfl-user-profile {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  padding: 7px 5px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.psfl-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #ffffff;
+  border-radius: 5px;
+  color: #174f7b;
+  background: linear-gradient(#ffffff, #cce9fc 55%, #a1d1f1);
+  box-shadow: inset 0 1px 0 #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.psfl-user-details strong {
+  overflow: hidden;
+  color: #ffffff;
+  font-size: 11px;
+  text-overflow: ellipsis;
+}
+
+.psfl-user-details span {
+  color: #dcefff;
+  font-size: 10px;
+  text-transform: capitalize;
+}
+
+.psfl-logout-button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  min-height: 36px;
+  padding: 5px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 4px;
+  color: #194c74;
+  background: linear-gradient(#ffffff, #e8f5fe 45%, #c3e0f5);
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 1px 2px rgba(12, 54, 88, 0.18);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.psfl-logout-button:hover {
+  background: linear-gradient(#ffffff, #f0faff 40%, #a9d7f7);
+}
+
+.psfl-logout-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 27px;
+  width: 27px;
+  height: 24px;
+  border: 1px solid #b0cce2;
+  border-radius: 3px;
+  background: linear-gradient(#ffffff, #d7eaf8);
+  font-size: 17px;
+}
+
+.psfl-logout-label {
+  overflow: hidden;
+}
+
+/* Collapsed sidebar: icons only */
+
+.psfl-sidebar-collapsed .psfl-brand {
+  justify-content: center;
+  padding: 10px 5px;
+}
+
+.psfl-sidebar-collapsed .psfl-brand-copy,
+.psfl-sidebar-collapsed .psfl-nav-caption,
+.psfl-sidebar-collapsed .psfl-nav-label,
+.psfl-sidebar-collapsed .psfl-user-details,
+.psfl-sidebar-collapsed .psfl-logout-label {
+  display: none;
+}
+
+.psfl-sidebar-collapsed .psfl-sidebar-toolbar {
+  justify-content: center;
+  padding: 5px 4px;
+}
+
+.psfl-sidebar-collapsed .psfl-navigation {
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+.psfl-sidebar-collapsed .psfl-nav-link {
+  justify-content: center;
+  padding: 5px 3px;
+}
+
+.psfl-sidebar-collapsed .psfl-nav-icon {
+  flex-basis: 32px;
+  width: 32px;
+  height: 32px;
+}
+
+.psfl-sidebar-collapsed .psfl-user-profile {
+  justify-content: center;
+  padding: 5px 1px;
+  border-color: transparent;
+  background: transparent;
+}
+
+.psfl-sidebar-collapsed .psfl-logout-button {
+  justify-content: center;
+  gap: 0;
+  padding: 5px 2px;
+}
+
+.psfl-sidebar-collapsed .psfl-logout-icon {
+  flex-basis: 31px;
+  width: 31px;
+}
+
+/* Main workspace */
+
+.psfl-workspace {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin-left: var(--psfl-sidebar-slim);
+  transition: margin-left 220ms ease;
+}
+
+.psfl-layout-expanded .psfl-workspace {
+  margin-left: var(--psfl-sidebar-wide);
+}
+
+/* Aero glass topbar */
+
+.psfl-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 52px;
+  padding: 7px 16px;
+  border-bottom: 1px solid #a1c2df;
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #f5faff 20%,
+    #e0effb 65%,
+    #cfe4f6 100%
+  );
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 2px 5px rgba(44, 81, 115, 0.12);
+}
+
+.psfl-topbar-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.psfl-breadcrumb {
+  color: #68849b;
+  font-size: 11px;
+}
+
+.psfl-breadcrumb-separator {
+  color: #9bb5ca;
+}
+
+.psfl-topbar-heading strong {
+  overflow: hidden;
+  color: #244f72;
+  font-size: 13px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+}
+
+.psfl-topbar-user {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-shrink: 0;
+  padding: 6px 10px;
+  border: 1px solid #b5d0e5;
+  border-radius: 4px;
+  color: #315b7b;
+  background: linear-gradient(#ffffff, #e1effa);
+  box-shadow: inset 0 1px 0 #ffffff;
+  font-size: 11px;
+}
+
+.psfl-status-dot {
+  width: 7px;
+  height: 7px;
+  border: 1px solid #2b8652;
+  border-radius: 50%;
+  background: linear-gradient(#8be6a5, #30a85c);
+  box-shadow: 0 0 3px rgba(45, 160, 85, 0.45);
+}
+
+.psfl-page-content {
+  flex: 1;
+  min-width: 0;
+  padding: 8px;
+}
+
+/* Desktop hamburger hidden */
+
+.psfl-menu-toggle {
+  display: none;
+}
+
+/* Overlay hidden on desktop */
+
+.psfl-overlay {
+  display: none;
+}
+
+/* Medium screens */
+
+@media (max-width: 900px) and (min-width: 701px) {
+  .psfl-layout {
+    --psfl-sidebar-wide: 215px;
+    --psfl-sidebar-slim: 55px;
+  }
+
+  .psfl-topbar {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .psfl-page-content {
+    padding: 6px;
+  }
+}
+
+/* Mobile navigation */
+
+@media (max-width: 700px) {
+  .psfl-sidebar,
+  .psfl-sidebar-expanded,
+  .psfl-sidebar-collapsed {
+    width: 260px;
+    max-width: 84vw;
+    transform: translateX(-105%);
+    transition: transform 220ms ease;
+  }
+
+  .psfl-sidebar.psfl-sidebar-open {
+    transform: translateX(0);
+  }
+
+  .psfl-sidebar .psfl-brand {
+    justify-content: flex-start;
+    padding: 10px 12px;
+  }
+
+  .psfl-sidebar .psfl-brand-copy,
+  .psfl-sidebar .psfl-nav-caption,
+  .psfl-sidebar .psfl-nav-label,
+  .psfl-sidebar .psfl-user-details,
+  .psfl-sidebar .psfl-logout-label {
+    display: flex;
+  }
+
+  .psfl-sidebar .psfl-sidebar-toolbar {
+    justify-content: space-between;
+    padding: 5px 12px;
+  }
+
+  .psfl-sidebar .psfl-navigation {
+    padding: 5px 7px 12px;
+  }
+
+  .psfl-sidebar .psfl-nav-link {
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 7px 9px;
+  }
+
+  .psfl-sidebar .psfl-user-profile {
+    justify-content: flex-start;
+    padding: 7px 5px;
+    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .psfl-sidebar .psfl-logout-button {
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 5px 10px;
+  }
+
+  .psfl-sidebar .psfl-close-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 28px;
+    width: 28px;
+    height: 28px;
+    margin-left: auto;
+    border: 1px solid #a6c7e1;
+    border-radius: 4px;
+    color: #24577e;
+    background: linear-gradient(#ffffff, #d5eafa);
+    font-size: 20px;
+    cursor: pointer;
+  }
+
+  .psfl-workspace,
+  .psfl-layout-expanded .psfl-workspace {
+    margin-left: 0;
+  }
+
+  .psfl-menu-toggle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    flex: 0 0 34px;
+    width: 34px;
+    height: 32px;
+    padding: 6px;
+    border: 1px solid #94b8d8;
+    border-radius: 4px;
+    background: linear-gradient(#ffffff, #e1effa 55%, #c6e0f4);
+    box-shadow: inset 0 1px 0 #ffffff;
+    cursor: pointer;
+  }
+
+  .psfl-menu-toggle span {
+    display: block;
+    width: 16px;
+    height: 2px;
+    border-radius: 1px;
+    background: #326b99;
+  }
+
+  .psfl-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: rgba(17, 43, 64, 0.45);
+    backdrop-filter: blur(2px);
+  }
+
+  .psfl-topbar {
+    min-height: 49px;
+    gap: 8px;
+    padding: 6px 9px;
+  }
+
+  .psfl-topbar-heading {
+    flex: 1;
+    gap: 5px;
+  }
+
+  .psfl-breadcrumb {
+    display: none;
+  }
+
+  .psfl-breadcrumb-separator {
+    display: none;
+  }
+
+  .psfl-topbar-heading strong {
+    font-size: 12px;
+  }
+
+  .psfl-topbar-user {
+    gap: 5px;
+    padding: 5px 7px;
+    font-size: 10px;
+  }
+
+  .psfl-page-content {
+    padding: 5px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .psfl-sidebar,
+  .psfl-workspace,
+  .psfl-nav-link,
+  .psfl-menu-toggle {
+    transition: none;
+  }
+}

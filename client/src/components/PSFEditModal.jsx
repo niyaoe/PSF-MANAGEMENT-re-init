@@ -52,6 +52,24 @@ const PSFEditModal = ({ record, onClose, onSaveSuccess }) => {
 
   const [message, setMessage] = useState("");
 
+  const [typeOfConcerns, setTypeOfConcerns] = useState([]);
+
+  useEffect(() => {
+    const fetchTypeOfConcerns = async () => {
+      try {
+        const response = await api.get("/type-of-concerns");
+
+        setTypeOfConcerns(
+          response.data.concerns.filter((concern) => concern.isActive),
+        );
+      } catch (error) {
+        console.error("Failed to fetch Type of Concerns:", error);
+      }
+    };
+
+    fetchTypeOfConcerns();
+  }, []);
+
   useEffect(() => {
     if (!record) {
       return;
@@ -519,102 +537,20 @@ const PSFEditModal = ({ record, onClose, onSaveSuccess }) => {
 
                 <select
                   name="typeOfConcern"
-                  value={formData.typeOfConcern}
+                  value={
+                    typeof formData.typeOfConcern === "object"
+                      ? formData.typeOfConcern?._id || ""
+                      : formData.typeOfConcern
+                  }
                   onChange={handleChange}
                 >
-                  <option value="">Select Status</option>
+                  <option value="">Select Type of Concern</option>
 
-                  <option value="Call not Connected">Call not Connected</option>
-
-                  <option value="Ring but no Responce">
-                    Ring but no Responce
-                  </option>
-
-                  <option value="Customer Busy">Customer Busy</option>
-
-                  <option value="Wrong Number">Wrong Number</option>
-
-                  <option value="Call after some Time">
-                    Call after some Time
-                  </option>
-
-                  <option value="Bill amount issue">Bill amount issue</option>
-
-                  <option value="Complaint Not Solved">
-                    Complaint Not Solved
-                  </option>
-
-                  <option value="Delay In Appointment">
-                    Delay In Appointment
-                  </option>
-
-                  <option value="Delay In Attending">Delay In Attending</option>
-
-                  <option value="Delay in Delivery">Delay in Delivery</option>
-
-                  <option value="Satisfied">Satisfied</option>
-
-                  <option value="Parts Issue">Parts Issue</option>
-
-                  <option value="Vehicle at Service Center">
-                    Vehicle at Service Center
-                  </option>
-
-                  <option value="Vehicle not Driven">Vehicle not Driven</option>
-
-                  <option value="Washing Issue">Washing Issue</option>
-
-                  <option value="Work not Completed">Work not Completed</option>
-
-                  <option value="Behaviour of Staff">Behaviour of Staff</option>
-
-                  <option value="Using Other Person">Using Other Person</option>
-
-                  <option value="Proper Updation">Proper Updation</option>
-
-                  <option value="Vehicle Damage">Vehicle Damage</option>
-
-                  <option value="Already Contacted">Already Contacted</option>
-
-                  <option value="Prvs service related">
-                    Prvs service related
-                  </option>
-
-                  <option value="Infra-Sales">Infra-Sales</option>
-
-                  <option value="Infra-Service">Infra-Service</option>
-
-                  <option value="Department Vehicle">Department Vehicle</option>
-
-                  <option value="Product Related">Product Related</option>
-
-                  <option value="Unauthorised use of Vehicle">
-                    Unauthorised use of Vehicle
-                  </option>
-
-                  <option value="Items Missing in the workshop">
-                    Items Missing in the workshop
-                  </option>
-
-                  <option value="Service Quality">Service Quality</option>
-
-                  <option value="Poor Workshop infrastructure - Ambience">
-                    Poor Workshop infrastructure - Ambience
-                  </option>
-
-                  <option value="Vehicle Damaged During Road Test / P&D">
-                    Vehicle Damaged During Road Test / P&D
-                  </option>
-
-                  <option value="Parts / Accessory related">
-                    Parts / Accessory related
-                  </option>
-
-                  <option value="Product related">Product related</option>
-
-                  <option value="RSA Related">RSA Related</option>
-
-                  <option value="Software updation">Software updation</option>
+                  {typeOfConcerns.map((concern) => (
+                    <option key={concern._id} value={concern._id}>
+                      {concern.name}
+                    </option>
+                  ))}
                 </select>
               </div>
 

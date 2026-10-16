@@ -1,0 +1,199 @@
+
+/* =========================================
+   WINDOWS 7 AERO — PAGINATION
+   File: src/components/Pagination.css
+   ========================================= */
+
+.aero-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 7px;
+  width: 100%;
+  min-width: 0;
+  min-height: 43px;
+  padding: 6px 9px;
+  border: 1px solid #a6c6e1;
+  border-radius: 0 0 4px 4px;
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #f1f7fc 28%,
+    #dfedf9 68%,
+    #d1e4f4 100%
+  );
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 1px 2px rgba(40, 79, 113, 0.1);
+  font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+.aero-pagination *,
+.aero-pagination *::before,
+.aero-pagination *::after {
+  box-sizing: border-box;
+}
+
+/* Previous and Next */
+
+.aero-pagination .aero-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 69px;
+  min-height: 28px;
+  padding: 5px 11px;
+  border: 1px solid #8eafd0;
+  border-radius: 3px;
+  color: #214f75;
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #f4f9fe 35%,
+    #dcecf9 75%,
+    #c9e0f3 100%
+  );
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    inset 0 -1px 0 rgba(121, 162, 197, 0.14),
+    0 1px 1px rgba(40, 79, 113, 0.1);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.aero-pagination .aero-button:hover:not(:disabled) {
+  border-color: #5b9bd0;
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #e7f4ff 42%,
+    #c2e2fb 100%
+  );
+}
+
+.aero-pagination .aero-button:active:not(:disabled) {
+  background: linear-gradient(#c2def3, #edf7ff);
+  box-shadow: inset 0 1px 3px rgba(36, 75, 109, 0.17);
+}
+
+.aero-pagination .aero-button:focus-visible {
+  outline: 2px solid #65aee7;
+  outline-offset: 2px;
+}
+
+.aero-pagination .aero-button:disabled {
+  color: #91a3b2;
+  border-color: #c6d5e2;
+  background: linear-gradient(#f8fbfd, #e8eff5);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* Page information */
+
+.aero-pagination .aero-page-info {
+  padding: 0 4px;
+  color: #315977;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Jump to page */
+
+.aero-pagination .aero-page-jump {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.aero-pagination .aero-page-jump input {
+  width: 57px;
+  min-width: 0;
+  height: 28px;
+  padding: 4px 6px;
+  border: 1px solid #98b8d4;
+  border-radius: 3px;
+  outline: none;
+  color: #244d6d;
+  background: linear-gradient(#ffffff, #f0f7fd);
+  box-shadow:
+    inset 0 1px 2px rgba(40, 79, 113, 0.08),
+    0 1px 0 #ffffff;
+  font-family: inherit;
+  font-size: 11px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.aero-pagination .aero-page-jump input:focus {
+  border-color: #4b9edc;
+  box-shadow: 0 0 0 2px rgba(83, 173, 237, 0.2);
+}
+
+.aero-pagination .aero-page-jump input::-webkit-inner-spin-button,
+.aero-pagination .aero-page-jump input::-webkit-outer-spin-button {
+  opacity: 1;
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .aero-pagination {
+    justify-content: center;
+    gap: 5px;
+    padding: 7px 5px;
+    border-radius: 0 0 3px 3px;
+  }
+
+  .aero-pagination .aero-button {
+    min-width: 57px;
+    min-height: 29px;
+    padding: 5px 7px;
+    font-size: 10px;
+  }
+
+  .aero-pagination .aero-page-info {
+    padding: 0 2px;
+    font-size: 10px;
+  }
+
+  .aero-pagination .aero-page-jump {
+    gap: 3px;
+  }
+
+  .aero-pagination .aero-page-jump input {
+    width: 44px;
+    height: 29px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 360px) {
+  .aero-pagination {
+    gap: 4px;
+    padding: 6px 3px;
+  }
+
+  .aero-pagination .aero-button {
+    min-width: 48px;
+    padding: 5px;
+  }
+
+  .aero-pagination .aero-page-info {
+    font-size: 9px;
+  }
+
+  .aero-pagination .aero-page-jump input {
+    width: 38px;
+  }
+}

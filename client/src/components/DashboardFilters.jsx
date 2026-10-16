@@ -1,4 +1,5 @@
 import BranchFilter from "./BranchFilter";
+import "./DashboardFilters.css";
 
 const DashboardFilters = ({
   search,

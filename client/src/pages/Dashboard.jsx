@@ -1,35 +1,45 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState, useCallback } from "react";
 import api from "../services/api";
-import logo from "../../public/logo.png";
-import DashboardLayout from "../components/DashboardLayout";
-import SummaryCard from "../components/SummaryCard";
+// import DashboardLayout from "../components/DashboardLayout";
 import DashboardFilters from "../components/DashboardFilters";
 import Pagination from "../components/Pagination";
 import PSFTable from "../components/PSFTable";
-import BranchFilter from "../components/BranchFilter";
 import PSFEditModal from "../components/PSFEditModal";
+import "./Dashboard.css";
+
+const SECTIONS = [
+  { id: "open", label: "Open", description: "Active complaints", icon: "○" },
+  {
+    id: "pending",
+    label: "Pending",
+    description: "Awaiting follow-up",
+    icon: "◷",
+  },
+  {
+    id: "closed",
+    label: "Closed",
+    description: "Resolved complaints",
+    icon: "✓",
+  },
+];
+
+const EMPTY_SUMMARY = {
+  totalRecords: 0,
+  openComplaints: 0,
+  closedComplaints: 0,
+  pending: 0,
+  notConnected: 0,
+  connected: 0,
+  concernCounts: [],
+};
 
 const Dashboard = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
-  const navigate = useNavigate();
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+  const user = JSON.parse(localStorage.getItem("user") || "null");
 
-    navigate("/login");
-  };
-
-  const [summary, setSummary] = useState({
-    totalRecords: 0,
-    openComplaints: 0,
-    closedComplaints: 0,
-    notConnected: 0,
-  });
-
+  const [activeSection, setActiveSection] = useState("open");
+  const [summary, setSummary] = useState(EMPTY_SUMMARY);
   const [records, setRecords] = useState([]);
   const [selectedRecord, setSelectedRecord] = useState(null);
-
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -38,9 +48,9 @@ const Dashboard = () => {
   const [notConnected, setNotConnected] = useState("");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
-
   const [page, setPage] = useState(1);
   const [limit] = useState(20);
+
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 20,
@@ -51,180 +61,313 @@ const Dashboard = () => {
   const [branches, setBranches] = useState([]);
   const [branchId, setBranchId] = useState("");
 
+  const [filtersOpen, setFiltersOpen] = useState(false);
+
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    let cancelled = false;
 
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
+    const fetchBranches = async () => {
+      try {
+        if (user?.role === "admin") {
+          const response = await api.get("/branches");
+          if (!cancelled) {
+            setBranches(response.data.branches || []);
+          }
+        } else if (!cancelled) {
+          setBranches(user?.branches || []);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          console.error("Failed to fetch branches:", err);
+        }
+      }
+    };
 
-      setBranches(user.branches || []);
-    }
+    fetchBranches();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  const fetchDashboard = async () => {
+  const fetchDashboard = useCallback(async () => {
     try {
       setLoading(true);
       setError("");
 
-      const params = {};
+      const params = {
+        page,
+        limit,
+        section: activeSection,
+      };
 
-      if (search.trim()) {
-        params.search = search.trim();
-      }
+      if (search.trim()) params.search = search.trim();
+      if (complaintStatus) params.complaintStatus = complaintStatus;
+      if (notConnected) params.notConnected = notConnected;
+      if (fromDate) params.fromDate = fromDate;
+      if (toDate) params.toDate = toDate;
+      if (branchId) params.branchId = branchId;
 
-      if (complaintStatus) {
-        params.complaintStatus = complaintStatus;
-      }
+      const response = await api.get("/psf/dashboard", { params });
 
-      if (notConnected) {
-        params.notConnected = notConnected;
-      }
+      setSummary((previous) => ({
+        ...previous,
+        ...response.data.summary,
+      }));
 
-      if (fromDate) {
-        params.fromDate = fromDate;
-      }
+      setRecords(response.data.records || []);
 
-      if (toDate) {
-        params.toDate = toDate;
-      }
-
-      if (branchId) {
-        params.branchId = branchId;
-      }
-
-      params.page = page;
-      params.limit = limit;
-
-      const response = await api.get("/psf/dashboard", {
-        params,
-      });
-      // console.log(response.data.records);
-
-      setSummary(response.data.summary);
-      setRecords(response.data.records);
-      setPagination(response.data.pagination);
-    } catch (error) {
-      setError(error.response?.data?.message || "Failed to load dashboard");
+      setPagination(
+        response.data.pagination || {
+          page: 1,
+          limit,
+          totalRecords: 0,
+          totalPages: 0,
+        },
+      );
+    } catch (err) {
+      setError(
+        err.response?.data?.message || "Failed to load dashboard records.",
+      );
     } finally {
       setLoading(false);
     }
-  };
-
-  const fetchBranches = async () => {
-    try {
-      const storedUser = localStorage.getItem("user");
-
-      if (!storedUser) {
-        return;
-      }
-
-      const user = JSON.parse(storedUser);
-
-      if (user.role === "admin") {
-        const response = await api.get("/branches");
-
-        setBranches(response.data.branches);
-      } else {
-        setBranches(user.branches || []);
-      }
-    } catch (error) {
-      console.error("Failed to fetch branches:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchBranches();
-  }, []);
+  }, [
+    page,
+    limit,
+    activeSection,
+    search,
+    complaintStatus,
+    notConnected,
+    fromDate,
+    toDate,
+    branchId,
+  ]);
 
   useEffect(() => {
     fetchDashboard();
-  }, [page]);
+  }, [fetchDashboard]);
 
-  if (loading) {
-    return (
-      <div className="eram-loading-screen">
-        <div className="eram-spinner">
-          <img src={logo} alt="logo" className="eram-loading-logo"  />
-        </div>
-      </div>
-    );
-  }
+  const handleSearch = () => {
+    if (page !== 1) {
+      setPage(1);
+      return;
+    }
 
-  if (error) {
-    return <h2>{error}</h2>;
-  }
+    fetchDashboard();
+  };
+
+  const handleSectionChange = (section) => {
+    if (section === activeSection) return;
+
+    setActiveSection(section);
+    setPage(1);
+  };
+
+  const sectionTotal = {
+    open: summary.openComplaints || 0,
+    pending: summary.pending ?? summary.notConnected ?? 0,
+    closed: summary.closedComplaints || 0,
+  }[activeSection];
+
+  const summaryCards = [
+    {
+      label: "Open",
+      value: summary.openComplaints || 0,
+      type: "open",
+    },
+    {
+      label: "Pending",
+      value: summary.pending ?? summary.notConnected ?? 0,
+      type: "pending",
+    },
+    {
+      label: "Closed",
+      value: summary.closedComplaints || 0,
+      type: "closed",
+    },
+  ];
 
   return (
-    <DashboardLayout>
-      {/* <h1>PSF Dashboard</h1> */}
-      {/* <p>Role: {user?.role}</p> */}
-      {/* <p>Accessible Branches: {branches.length}</p> */}
-      {/* <button onClick={handleLogout}>Logout</button> */}
+    <div className="psfd-dashboard">
+      {/* 1. FILTERS AT THE TOP */}
+      <section className="psfd-filter-section">
+        <div className="psfd-filter-topbar">
+          <span className="psfd-filter-label">FILTERS</span>
 
-      {/* {user?.role === "admin" && (
-        <BranchFilter
+          <button
+            type="button"
+            className="psfd-refresh-button"
+            onClick={fetchDashboard}
+            disabled={loading}
+            title="Refresh records"
+          >
+            ↻
+          </button>
+        </div>
+
+        <DashboardFilters
+          search={search}
+          setSearch={setSearch}
+          complaintStatus={complaintStatus}
+          setComplaintStatus={setComplaintStatus}
+          notConnected={notConnected}
+          setNotConnected={setNotConnected}
+          fromDate={fromDate}
+          setFromDate={setFromDate}
+          toDate={toDate}
+          setToDate={setToDate}
+          onSearch={handleSearch}
           branches={branches}
           branchId={branchId}
-          setBranchId={setBranchId}
+          setBranchId={(id) => {
+            setBranchId(id);
+            setPage(1);
+          }}
         />
-      )} */}
+      </section>
 
-      <DashboardFilters
-        search={search}
-        setSearch={setSearch}
-        complaintStatus={complaintStatus}
-        setComplaintStatus={setComplaintStatus}
-        notConnected={notConnected}
-        setNotConnected={setNotConnected}
-        fromDate={fromDate}
-        setFromDate={setFromDate}
-        toDate={toDate}
-        setToDate={setToDate}
-        onSearch={fetchDashboard}
-        branches={branches}
-        branchId={branchId}
-        setBranchId={setBranchId}
-      />
+      {/* 2. SMALL OPEN / PENDING / CLOSED COUNT TILES */}
+      <section className="psfd-summary-grid" aria-label="Complaint counts">
+        {summaryCards.map((card) => (
+          <article
+            className={`psfd-summary-card psfd-summary-${card.type}`}
+            key={card.type}
+          >
+            <span className="psfd-summary-label">{card.label}</span>
+            <strong className="psfd-summary-value">
+              {Number(card.value).toLocaleString("en-IN")}
+            </strong>
+          </article>
+        ))}
+      </section>
 
-      <div className="aero-summary-grid">
-        <SummaryCard title="Total Records" value={summary.totalRecords} />
+      {/* 3. PROPERLY ALIGNED SECTION TABS */}
+      <section className="psfd-section-panel">
+        <div
+          className="psfd-section-tabs"
+          role="tablist"
+          aria-label="Complaint sections"
+        >
+          {SECTIONS.map((section) => (
+            <button
+              key={section.id}
+              type="button"
+              role="tab"
+              aria-selected={activeSection === section.id}
+              className={`psfd-section-tab ${
+                activeSection === section.id ? "psfd-section-tab-active" : ""
+              } psfd-tab-${section.id}`}
+              onClick={() => handleSectionChange(section.id)}
+            >
+              <span className="psfd-tab-icon" aria-hidden="true">
+                {section.icon}
+              </span>
 
-        <SummaryCard title="Open Complaints" value={summary.openComplaints} />
+              <span className="psfd-tab-copy">
+                <strong>{section.label}</strong>
+                <small>
+                  {Number(
+                    {
+                      open: summary.openComplaints || 0,
+                      pending: summary.pending ?? summary.notConnected ?? 0,
+                      closed: summary.closedComplaints || 0,
+                    }[section.id],
+                  ).toLocaleString("en-IN")}
+                </small>
+              </span>
+            </button>
+          ))}
+        </div>
+      </section>
 
-        <SummaryCard
-          title="Closed Complaints"
-          value={summary.closedComplaints}
-        />
+      {/* 4. SUMMARY FOR THE SELECTED SECTION */}
+      <section className="psfd-content-panel">
+        <div className="psfd-section-summary-header">
+          <span>
+            {SECTIONS.find((item) => item.id === activeSection)?.label} summary
+          </span>
+          <span className="psfd-record-count">
+            {Number(sectionTotal).toLocaleString("en-IN")} records
+          </span>
+        </div>
 
-        <SummaryCard title="Pending" value={summary.notConnected} />
-        <SummaryCard title="Connected" value={summary.connected} />
-      </div>
+        {summary.concernCounts?.length > 0 ? (
+          <div className="psfd-concern-grid">
+            {summary.concernCounts.map((concern) => (
+              <article
+                className="psfd-concern-card"
+                key={concern._id || concern.name}
+              >
+                <span className="psfd-concern-indicator" />
+                <span className="psfd-concern-name">{concern.name}</span>
+                <strong>
+                  {Number(concern.count || 0).toLocaleString("en-IN")}
+                </strong>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div className="psfd-empty-breakdown">
+            No concern summary available.
+          </div>
+        )}
+      </section>
 
-      <PSFTable
-        records={records}
-        onSelectRecord={setSelectedRecord}
-        page={page}
-        limit={limit}
-      />
+      {/* 5. RECORDS FOR THE SELECTED SECTION */}
+      <section className="psfd-content-panel psfd-records-panel">
+        <div className="psfd-records-toolbar">
+          <span className="psfd-records-title">
+            {SECTIONS.find((item) => item.id === activeSection)?.label} records
+          </span>
 
-      <Pagination
-        page={page}
-        totalPages={pagination.totalPages}
-        onPageChange={(newPage) => {
-          setPage(newPage);
-        }}
-      />
+          <span className="psfd-total-badge">
+            {Number(pagination.totalRecords || 0).toLocaleString("en-IN")}{" "}
+            results
+          </span>
+        </div>
+
+        {error && (
+          <div className="psfd-error-message" role="alert">
+            <span>{error}</span>
+            <button type="button" onClick={fetchDashboard}>
+              Retry
+            </button>
+          </div>
+        )}
+
+        {loading ? (
+          <div className="psfd-loading-state" role="status">
+            <span className="psfd-loading-spinner" />
+            <span>Loading records...</span>
+          </div>
+        ) : (
+          <div className="psfd-table-container">
+            <PSFTable
+              records={records}
+              onSelectRecord={setSelectedRecord}
+              page={page}
+              limit={limit}
+            />
+          </div>
+        )}
+
+        {/* 6. PAGINATION AT THE BOTTOM */}
+        <div className="psfd-pagination-container">
+          <Pagination
+            page={page}
+            totalPages={pagination.totalPages}
+            onPageChange={setPage}
+          />
+        </div>
+      </section>
 
       <PSFEditModal
         record={selectedRecord}
-        onClose={() => {
-          setSelectedRecord(null);
-        }}
-        onSaveSuccess={() => {
-          fetchDashboard();
-        }}
+        onClose={() => setSelectedRecord(null)}
+        onSaveSuccess={fetchDashboard}
       />
-    </DashboardLayout>
+    </div>
   );
 };
 

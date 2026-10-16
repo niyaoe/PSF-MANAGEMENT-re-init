@@ -1,0 +1,287 @@
+
+/* =========================================
+   WINDOWS 7 AERO — PSF RECORDS TABLE
+   File: src/components/PSFTable.css
+   ========================================= */
+
+.psft-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  max-height: calc(100vh - 330px);
+  overflow: auto;
+  border: 1px solid #a8c6df;
+  border-radius: 3px;
+  background: #ffffff;
+  scrollbar-width: thin;
+  scrollbar-color: #a4c5df #eaf3fa;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+}
+
+.psft-wrapper * {
+  box-sizing: border-box;
+}
+
+.psft-wrapper::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+
+.psft-wrapper::-webkit-scrollbar-track {
+  border: 1px solid #d3e4f1;
+  background: linear-gradient(90deg, #f5faff, #e5f0f8);
+}
+
+.psft-wrapper::-webkit-scrollbar-thumb {
+  border: 2px solid #edf5fb;
+  border-radius: 7px;
+  background: linear-gradient(180deg, #d4e7f6, #9fc3e0);
+}
+
+.psft-wrapper::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #b9d9f1, #76acd5);
+}
+
+.psft-table {
+  width: 100%;
+  min-width: 1320px;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: #263d50;
+  background: #ffffff;
+  font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+  font-size: 11px;
+}
+
+/* Glossy Windows 7 column headers */
+
+.psft-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.psft-table thead tr {
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #f4f9fd 18%,
+    #e0edf8 52%,
+    #c8dff1 100%
+  );
+}
+
+.psft-table th {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  height: 34px;
+  padding: 7px 9px;
+  border-right: 1px solid #c0d5e7;
+  border-bottom: 1px solid #8eb5d6;
+  color: #244e70;
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #f3f8fc 20%,
+    #e0edf8 60%,
+    #c8dff1 100%
+  );
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    inset 0 -1px 0 rgba(105, 151, 190, 0.16);
+  font-size: 10px;
+  font-weight: 700;
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 0.25px;
+  white-space: nowrap;
+}
+
+.psft-table th:first-child {
+  border-left: 0;
+}
+
+.psft-table th:last-child {
+  border-right: 0;
+}
+
+/* Compact, readable records */
+
+.psft-table tbody tr {
+  background: #ffffff;
+  transition: background 0.12s ease;
+}
+
+.psft-table tbody tr:nth-child(even) {
+  background: #f0f7fd;
+}
+
+.psft-table tbody tr:hover {
+  background: #dceeff;
+}
+
+.psft-table td {
+  height: 31px;
+  padding: 6px 9px;
+  border-right: 1px solid #e1eaf2;
+  border-bottom: 1px solid #dce7f0;
+  color: #344d61;
+  font-size: 11px;
+  line-height: 1.35;
+  text-align: left;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.psft-table td:last-child {
+  border-right: 0;
+}
+
+.psft-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* Keep lengthy remarks readable without breaking layout */
+
+.psft-table td:nth-child(16) {
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Status labels */
+
+.psft-table td .status,
+.psft-table td .status-badge,
+.psft-table td .complaint-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 20px;
+  padding: 3px 8px;
+  border: 1px solid #b4cde2;
+  border-radius: 3px;
+  color: #315d7e;
+  background: linear-gradient(#ffffff, #e1effa);
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Aero action buttons */
+
+.psft-table .psft-action-btn,
+.psft-table .psft-view-btn,
+.psft-table .psft-edit-btn,
+.psft-table button {
+  min-height: 25px;
+  margin: 1px 3px 1px 0;
+  padding: 4px 9px;
+  border: 1px solid #91b5d5;
+  border-radius: 3px;
+  color: #20527b;
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #eff7fd 40%,
+    #d3e7f7 100%
+  );
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 1px 1px rgba(43, 82, 117, 0.1);
+  font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.12s ease;
+}
+
+.psft-table .psft-action-btn:hover,
+.psft-table .psft-view-btn:hover,
+.psft-table .psft-edit-btn:hover,
+.psft-table button:hover {
+  border-color: #5e9ed1;
+  background: linear-gradient(#ffffff, #e1f2ff 45%, #b6daf5);
+}
+
+.psft-table .psft-action-btn:active,
+.psft-table .psft-view-btn:active,
+.psft-table .psft-edit-btn:active,
+.psft-table button:active {
+  background: linear-gradient(#c4dff3, #edf7ff);
+}
+
+/* Empty state */
+
+.psft-empty,
+.psft-empty-state,
+.psft-table .empty-state {
+  padding: 28px 12px;
+  color: #6b8296;
+  background: linear-gradient(#ffffff, #f1f7fc);
+  font-size: 12px;
+  text-align: center;
+}
+
+/* Tablet */
+
+@media (max-width: 800px) {
+  .psft-wrapper {
+    max-height: calc(100dvh - 330px);
+    overflow: auto;
+  }
+
+  .psft-table {
+    min-width: 1200px;
+    font-size: 11px;
+  }
+
+  .psft-table th {
+    height: 33px;
+    padding: 7px 8px;
+    font-size: 10px;
+  }
+
+  .psft-table td {
+    height: 30px;
+    padding: 6px 8px;
+  }
+}
+
+/* Mobile: preserve all columns with horizontal scrolling */
+
+@media (max-width: 600px) {
+  .psft-wrapper {
+    max-height: calc(100dvh - 290px);
+    border-radius: 2px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .psft-table {
+    min-width: 1150px;
+  }
+
+  .psft-table th {
+    height: 32px;
+    padding: 6px 7px;
+    font-size: 10px;
+  }
+
+  .psft-table td {
+    height: 29px;
+    padding: 5px 7px;
+    font-size: 10px;
+  }
+
+  .psft-table .psft-action-btn,
+  .psft-table .psft-view-btn,
+  .psft-table .psft-edit-btn,
+  .psft-table button {
+    min-height: 25px;
+    padding: 4px 7px;
+    font-size: 10px;
+  }
+}
