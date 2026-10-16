@@ -1,0 +1,740 @@
+
+/* ==========================================
+   WINDOWS 7 AERO — BRANCH MANAGEMENT
+========================================== */
+
+.branch-aero-page {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  padding: 10px 12px 16px;
+  color: #193b59;
+  font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+  font-size: 12px;
+  box-sizing: border-box;
+}
+
+.branch-aero-page *,
+.branch-aero-page *::before,
+.branch-aero-page *::after {
+  box-sizing: border-box;
+}
+
+/* Header */
+
+.branch-aero-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 68px;
+  margin-bottom: 12px;
+  padding: 11px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.96);
+  border-radius: 6px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.97),
+    rgba(235, 247, 255, 0.95) 30%,
+    rgba(201, 228, 249, 0.96) 72%,
+    rgba(178, 215, 242, 0.96)
+  );
+  box-shadow:
+    0 1px 0 #fff inset,
+    0 0 0 1px rgba(96, 150, 192, 0.24),
+    0 3px 10px rgba(27, 66, 99, 0.12);
+}
+
+.branch-aero-heading-icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  border: 1px solid #9bc3e0;
+  border-radius: 6px;
+  background: linear-gradient(145deg, #fff, #c7e5fa);
+  color: #24699d;
+  font-size: 25px;
+  box-shadow: 0 1px 0 #fff inset;
+}
+
+.branch-aero-header-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.branch-aero-title {
+  margin: 0;
+  color: #17446c;
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 1.3;
+  text-shadow: 0 1px #fff;
+}
+
+.branch-aero-subtitle {
+  margin: 3px 0 0;
+  color: #4b6b86;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.branch-aero-header-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex-shrink: 0;
+  padding: 6px 9px;
+  border: 1px solid #b2cee3;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.58);
+  color: #476780;
+  font-size: 10px;
+}
+
+.branch-aero-status-light,
+.branch-aero-footer-indicator > span {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border: 1px solid #399b50;
+  border-radius: 50%;
+  background: #61d778;
+  box-shadow: 0 0 4px rgba(99, 215, 122, 0.3);
+}
+
+/* Glass panels */
+
+.branch-aero-panel {
+  width: 100%;
+  min-width: 0;
+  margin-bottom: 12px;
+  padding: 13px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.96);
+  border-radius: 6px;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.96),
+    rgba(240, 248, 255, 0.94) 48%,
+    rgba(218, 237, 252, 0.95)
+  );
+  box-shadow:
+    0 1px 0 #fff inset,
+    0 0 0 1px rgba(99, 153, 194, 0.2),
+    0 3px 11px rgba(27, 65, 98, 0.1);
+}
+
+.branch-aero-panel-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  margin-bottom: 11px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid #c8ddea;
+}
+
+.branch-aero-panel-icon {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  border: 1px solid #a5c9e5;
+  border-radius: 5px;
+  background: linear-gradient(#fff, #d2eafa);
+  color: #256b9f;
+  font-size: 19px;
+  line-height: 1;
+  box-shadow: 0 1px 0 #fff inset;
+}
+
+.branch-aero-panel-heading > div:nth-child(2) {
+  flex: 1;
+  min-width: 0;
+}
+
+.branch-aero-panel-title {
+  margin: 0;
+  color: #194c74;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.branch-aero-panel-subtitle {
+  margin: 2px 0 0;
+  color: #68839a;
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+/* Compact create branch form */
+
+.branch-aero-form {
+  display: grid;
+  grid-template-columns:
+    minmax(180px, 1.2fr)
+    minmax(140px, 0.8fr)
+    minmax(135px, 0.65fr);
+  align-items: end;
+  gap: 12px;
+}
+
+.branch-aero-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.branch-aero-form-group label {
+  color: #315571;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.branch-aero-form-group input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: 34px;
+  padding: 7px 9px;
+  border: 1px solid #a4bfd4;
+  border-radius: 4px;
+  outline: none;
+  background: linear-gradient(#fff, #f4f9fd);
+  color: #193b59;
+  font-family: inherit;
+  font-size: 12px;
+  box-shadow:
+    0 1px 2px rgba(49, 91, 120, 0.06) inset,
+    0 1px 0 #fff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.branch-aero-form-group input::placeholder {
+  color: #8da3b5;
+}
+
+.branch-aero-form-group input:focus {
+  border-color: #5a9dd0;
+  box-shadow:
+    0 0 0 2px rgba(70, 153, 213, 0.16),
+    0 1px 2px rgba(49, 91, 120, 0.06) inset;
+}
+
+.branch-aero-form-actions {
+  display: flex;
+  min-width: 0;
+}
+
+/* Glossy Aero buttons */
+
+.branch-aero-create-button,
+.branch-aero-refresh-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 6px 12px;
+  border: 1px solid #88b4d5;
+  border-radius: 4px;
+  background: linear-gradient(
+    180deg,
+    #fff 0%,
+    #f0f9ff 26%,
+    #d3eafa 65%,
+    #b5d9f1 100%
+  );
+  color: #194e75;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.35;
+  text-shadow: 0 1px #fff;
+  box-shadow: 0 1px 0 #fff inset, 0 1px 2px #204f7217;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.branch-aero-create-button {
+  width: 100%;
+  white-space: nowrap;
+}
+
+.branch-aero-create-button:hover,
+.branch-aero-refresh-button:hover {
+  border-color: #5b9bca;
+  background: linear-gradient(#fff, #e4f5ff 30%, #b8def8);
+}
+
+.branch-aero-create-button:active {
+  background: linear-gradient(#b8d9f0, #e8f6ff);
+  box-shadow: 0 1px 3px #214e6c1a inset;
+}
+
+.branch-aero-create-button:disabled,
+.branch-aero-refresh-button:disabled {
+  opacity: 0.58;
+  cursor: not-allowed;
+}
+
+.branch-aero-spinner {
+  width: 13px;
+  height: 13px;
+  border: 2px solid #8ab7d5;
+  border-top-color: #216ca4;
+  border-radius: 50%;
+  animation: branch-aero-spin 0.8s linear infinite;
+}
+
+@keyframes branch-aero-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Message */
+
+.branch-aero-message {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border: 1px solid #a4c9e5;
+  border-radius: 5px;
+  background: linear-gradient(#f8fdff, #dcefff);
+  color: #245779;
+  overflow-wrap: anywhere;
+  box-shadow: 0 1px 2px rgba(26, 75, 112, 0.06);
+}
+
+.branch-aero-message-icon {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  border: 1px solid #a4c9b0;
+  border-radius: 50%;
+  background: linear-gradient(#f8fff9, #d8f0dd);
+  color: #268042;
+  font-weight: 700;
+}
+
+.branch-aero-message-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.branch-aero-message-close {
+  width: 25px;
+  height: 25px;
+  flex: 0 0 25px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background: transparent;
+  color: #416783;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.branch-aero-message-close:hover {
+  border-color: #b5cfe2;
+  background: #ffffffa6;
+}
+
+/* Existing branches toolbar */
+
+.branch-aero-list-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.branch-aero-list-heading {
+  flex-shrink: 0;
+}
+
+.branch-aero-list-heading-copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.branch-aero-list-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.branch-aero-count {
+  padding: 5px 9px;
+  border: 1px solid #bad3e6;
+  border-radius: 12px;
+  background: linear-gradient(#fff, #e5f2fb);
+  color: #416985;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.branch-aero-refresh-button {
+  width: 30px;
+  min-width: 30px;
+  height: 30px;
+  min-height: 30px;
+  padding: 0;
+  font-size: 19px;
+}
+
+/* Table */
+
+.branch-aero-table-wrapper {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: auto;
+  border: 1px solid #a9c5d9;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.8);
+  scrollbar-color: #aac8df #edf5fa;
+  scrollbar-width: thin;
+}
+
+.branch-aero-table {
+  width: 100%;
+  min-width: 450px;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: #2b4b65;
+  font-size: 11px;
+  text-align: left;
+}
+
+.branch-aero-table thead th {
+  padding: 10px 12px;
+  border-right: 1px solid #ffffff99;
+  border-bottom: 1px solid #95bad5;
+  background: linear-gradient(
+    180deg,
+    #fff,
+    #edf7ff 25%,
+    #d8edfc 65%,
+    #c6e2f7
+  );
+  color: #204e72;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+  text-shadow: 0 1px #fff;
+}
+
+.branch-aero-table thead th:last-child {
+  border-right: 0;
+}
+
+.branch-aero-table tbody tr {
+  background: rgba(255, 255, 255, 0.88);
+  transition: background 0.12s ease;
+}
+
+.branch-aero-table tbody tr:nth-child(even) {
+  background: rgba(232, 243, 251, 0.85);
+}
+
+.branch-aero-table tbody tr:hover {
+  background: #d9efff;
+}
+
+.branch-aero-table tbody td {
+  padding: 9px 12px;
+  border-right: 1px solid #e2edf5;
+  border-bottom: 1px solid #dce8f1;
+  vertical-align: middle;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.branch-aero-table tbody td:last-child {
+  border-right: 0;
+}
+
+.branch-aero-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.branch-aero-index {
+  width: 55px;
+  color: #8199ad;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.branch-aero-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 150px;
+}
+
+.branch-aero-name-cell strong {
+  color: #244966;
+  font-weight: 600;
+}
+
+.branch-aero-row-icon {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  border: 1px solid #b2cee3;
+  border-radius: 4px;
+  background: linear-gradient(#fff, #d9edfc);
+  color: #3975a0;
+  font-size: 17px;
+}
+
+.branch-aero-code {
+  display: inline-block;
+  padding: 4px 8px;
+  border: 1px solid #b9d1e4;
+  border-radius: 3px;
+  background: linear-gradient(#fff, #e5f1fa);
+  color: #365f7e;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.branch-aero-branch-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.branch-aero-branch-status > span {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border-radius: 50%;
+}
+
+.branch-aero-active {
+  color: #2d7943;
+}
+
+.branch-aero-active > span {
+  border: 1px solid #479c5d;
+  background: #69d17c;
+}
+
+.branch-aero-inactive {
+  color: #8a5d5d;
+}
+
+.branch-aero-inactive > span {
+  border: 1px solid #bd7777;
+  background: #e99a9a;
+}
+
+/* Table footer */
+
+.branch-aero-table-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 31px;
+  padding: 8px 2px 0;
+  color: #72899c;
+  font-size: 10px;
+}
+
+.branch-aero-footer-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Empty state */
+
+.branch-aero-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 145px;
+  padding: 20px;
+  color: #71899c;
+  text-align: center;
+}
+
+.branch-aero-empty strong {
+  color: #315c7b;
+  font-size: 13px;
+}
+
+.branch-aero-empty-icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid #b3d0e5;
+  border-radius: 50%;
+  background: linear-gradient(#fff, #d8edfc);
+  color: #5484a6;
+  font-size: 23px;
+}
+
+/* Tablet */
+
+@media (max-width: 850px) {
+  .branch-aero-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 11px;
+  }
+
+  .branch-aero-form-actions {
+    grid-column: 1 / -1;
+  }
+
+  .branch-aero-create-button {
+    min-height: 36px;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .branch-aero-page {
+    padding: 8px 7px 12px;
+  }
+
+  .branch-aero-header {
+    min-height: 61px;
+    gap: 9px;
+    padding: 10px;
+  }
+
+  .branch-aero-heading-icon {
+    width: 35px;
+    height: 35px;
+    flex-basis: 35px;
+    font-size: 21px;
+  }
+
+  .branch-aero-title {
+    font-size: 18px;
+  }
+
+  .branch-aero-subtitle {
+    font-size: 10px;
+  }
+
+  .branch-aero-header-meta {
+    display: none;
+  }
+
+  .branch-aero-panel {
+    margin-bottom: 10px;
+    padding: 11px;
+  }
+
+  .branch-aero-panel-heading {
+    gap: 8px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+  }
+
+  .branch-aero-panel-icon {
+    width: 27px;
+    height: 27px;
+    flex-basis: 27px;
+  }
+
+  .branch-aero-panel-title {
+    font-size: 14px;
+  }
+
+  .branch-aero-form {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .branch-aero-form-group input {
+    height: 38px;
+    font-size: 13px;
+  }
+
+  .branch-aero-form-actions {
+    grid-column: auto;
+  }
+
+  .branch-aero-create-button {
+    min-height: 38px;
+    font-size: 12px;
+  }
+
+  .branch-aero-list-heading {
+    flex-wrap: wrap;
+  }
+
+  .branch-aero-list-tools {
+    margin-left: auto;
+  }
+
+  .branch-aero-table {
+    min-width: 450px;
+  }
+
+  .branch-aero-table thead th,
+  .branch-aero-table tbody td {
+    padding: 9px;
+  }
+
+  .branch-aero-table-footer {
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 360px) {
+  .branch-aero-page {
+    padding: 6px;
+  }
+
+  .branch-aero-heading-icon {
+    display: none;
+  }
+
+  .branch-aero-title {
+    font-size: 17px;
+  }
+
+  .branch-aero-panel {
+    padding: 9px;
+  }
+
+  .branch-aero-list-tools {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+/* Accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+  .branch-aero-page *,
+  .branch-aero-page *::before,
+  .branch-aero-page *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

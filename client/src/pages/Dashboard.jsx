@@ -227,60 +227,49 @@ const Dashboard = () => {
         />
       </section>
 
-      {/* 2. SMALL OPEN / PENDING / CLOSED COUNT TILES */}
-      <section className="psfd-summary-grid" aria-label="Complaint counts">
-        {summaryCards.map((card) => (
-          <article
-            className={`psfd-summary-card psfd-summary-${card.type}`}
-            key={card.type}
-          >
-            <span className="psfd-summary-label">{card.label}</span>
-            <strong className="psfd-summary-value">
-              {Number(card.value).toLocaleString("en-IN")}
-            </strong>
-          </article>
-        ))}
-      </section>
 
-      {/* 3. PROPERLY ALIGNED SECTION TABS */}
+      {/* SECTION TABS WITH COLORED COUNTS */}
       <section className="psfd-section-panel">
         <div
           className="psfd-section-tabs"
           role="tablist"
           aria-label="Complaint sections"
         >
-          {SECTIONS.map((section) => (
-            <button
-              key={section.id}
-              type="button"
-              role="tab"
-              aria-selected={activeSection === section.id}
-              className={`psfd-section-tab ${
-                activeSection === section.id ? "psfd-section-tab-active" : ""
-              } psfd-tab-${section.id}`}
-              onClick={() => handleSectionChange(section.id)}
-            >
-              <span className="psfd-tab-icon" aria-hidden="true">
-                {section.icon}
-              </span>
+          {SECTIONS.map((section) => {
+            const count = {
+              open: summary.openComplaints || 0,
+              pending: summary.pending ?? summary.notConnected ?? 0,
+              closed: summary.closedComplaints || 0,
+            }[section.id];
 
-              <span className="psfd-tab-copy">
-                <strong>{section.label}</strong>
-                <small>
-                  {Number(
-                    {
-                      open: summary.openComplaints || 0,
-                      pending: summary.pending ?? summary.notConnected ?? 0,
-                      closed: summary.closedComplaints || 0,
-                    }[section.id],
-                  ).toLocaleString("en-IN")}
-                </small>
-              </span>
-            </button>
-          ))}
+            return (
+              <button
+                key={section.id}
+                type="button"
+                role="tab"
+                aria-selected={activeSection === section.id}
+                className={`psfd-section-tab psfd-tab-${section.id} ${activeSection === section.id
+                    ? "psfd-section-tab-active"
+                    : ""
+                  }`}
+                onClick={() => handleSectionChange(section.id)}
+              >
+                <span className="psfd-tab-icon" aria-hidden="true">
+                  {section.icon}
+                </span>
+
+                <span className="psfd-tab-copy">
+                  <strong>{section.label}</strong>
+                </span>
+
+                <span className={`psfd-tab-count psfd-count-${section.id}`}>
+                  {Number(count).toLocaleString("en-IN")}
+                </span>
+              </button>
+            );
+          })}
         </div>
       </section>
-
       {/* 4. SUMMARY FOR THE SELECTED SECTION */}
       <section className="psfd-content-panel">
         <div className="psfd-section-summary-header">

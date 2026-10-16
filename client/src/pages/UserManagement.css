@@ -1,0 +1,1232 @@
+
+/* ==========================================
+   WINDOWS 7 AERO — USER MANAGEMENT
+   Scoped component styles
+========================================== */
+
+.user-aero-page {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  padding: 10px 12px 16px;
+  color: #193b59;
+  font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+  font-size: 12px;
+  box-sizing: border-box;
+}
+
+.user-aero-page *,
+.user-aero-page *::before,
+.user-aero-page *::after {
+  box-sizing: border-box;
+}
+
+/* ===== Glass title bar ===== */
+
+.user-aero-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 68px;
+  margin-bottom: 12px;
+  padding: 11px 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  border-radius: 6px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.96) 0%,
+      rgba(235, 247, 255, 0.94) 28%,
+      rgba(201, 228, 249, 0.96) 70%,
+      rgba(178, 215, 242, 0.96) 100%
+    );
+  box-shadow:
+    0 1px 0 #fff inset,
+    0 0 0 1px rgba(96, 150, 192, 0.25),
+    0 3px 10px rgba(27, 66, 99, 0.12);
+}
+
+.user-aero-header::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.95);
+  content: "";
+}
+
+.user-aero-heading-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  border: 1px solid #94bfe0;
+  border-radius: 7px;
+  background: linear-gradient(145deg, #fff, #c3e3fa);
+  color: #2269a0;
+  font-size: 17px;
+  box-shadow: 0 1px 0 #fff inset, 0 2px 4px #6d9fc32b;
+}
+
+.user-aero-heading-icon span + span {
+  margin-left: -7px;
+  margin-top: 8px;
+}
+
+.user-aero-header-content {
+  min-width: 0;
+  flex: 1;
+}
+
+.user-aero-title {
+  margin: 0;
+  color: #17446c;
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 1.3;
+  text-shadow: 0 1px 0 #fff;
+}
+
+.user-aero-subtitle {
+  margin: 3px 0 0;
+  color: #4b6b86;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.user-aero-header-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex-shrink: 0;
+  padding: 6px 9px;
+  border: 1px solid #b2cee3;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.56);
+  color: #476780;
+  font-size: 10px;
+}
+
+.user-aero-status-light,
+.user-aero-footer-indicator > span {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border: 1px solid #399b50;
+  border-radius: 50%;
+  background: #61d778;
+  box-shadow: 0 0 4px #63d77a66;
+}
+
+/* ===== Feedback message ===== */
+
+.user-aero-message {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border: 1px solid #a4c9e5;
+  border-radius: 5px;
+  background: linear-gradient(#f8fdff, #dcefff);
+  color: #245779;
+  box-shadow: 0 1px 2px #214c6a12;
+  overflow-wrap: anywhere;
+}
+
+.user-aero-message-icon {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  border: 1px solid #a4c9b0;
+  border-radius: 50%;
+  background: linear-gradient(#f8fff9, #d8f0dd);
+  color: #268042;
+  font-weight: 700;
+}
+
+.user-aero-message > span:nth-child(2) {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-aero-message-close {
+  width: 25px;
+  height: 25px;
+  flex: 0 0 25px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background: transparent;
+  color: #416783;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.user-aero-message-close:hover {
+  border-color: #b5cfe2;
+  background: #ffffffa6;
+}
+
+/* ===== Main Aero panels ===== */
+
+.user-aero-panel {
+  width: 100%;
+  min-width: 0;
+  margin-bottom: 12px;
+  padding: 13px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.96);
+  border-radius: 6px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.96),
+      rgba(240, 248, 255, 0.94) 48%,
+      rgba(218, 237, 252, 0.95)
+    );
+  box-shadow:
+    0 1px 0 #fff inset,
+    0 0 0 1px rgba(99, 153, 194, 0.2),
+    0 3px 11px rgba(27, 65, 98, 0.1);
+}
+
+.user-aero-panel-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #c8ddea;
+}
+
+.user-aero-panel-icon {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  border: 1px solid #a5c9e5;
+  border-radius: 5px;
+  background: linear-gradient(#fff, #d2eafa);
+  color: #256b9f;
+  font-size: 19px;
+  line-height: 1;
+  box-shadow: 0 1px 0 #fff inset;
+}
+
+.user-aero-panel-heading > div:nth-child(2) {
+  min-width: 0;
+  flex: 1;
+}
+
+.user-aero-panel-title {
+  margin: 0;
+  color: #194c74;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.user-aero-panel-subtitle {
+  margin: 2px 0 0;
+  color: #68839a;
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+/* ===== Compact form ===== */
+
+.user-aero-create-form {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  align-items: end;
+  gap: 11px 12px;
+}
+
+.user-aero-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.user-aero-form-group label {
+  color: #315571;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.user-aero-form-group input,
+.user-aero-form-group select,
+.user-aero-modal-select {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 34px;
+  padding: 7px 9px;
+  border: 1px solid #a4bfd4;
+  border-radius: 4px;
+  outline: none;
+  background: linear-gradient(180deg, #fff, #f4f9fd);
+  color: #193b59;
+  font-family: inherit;
+  font-size: 12px;
+  box-shadow:
+    0 1px 2px #315b7810 inset,
+    0 1px 0 #fff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.user-aero-form-group input::placeholder {
+  color: #8da3b5;
+}
+
+.user-aero-form-group input:focus,
+.user-aero-form-group select:focus,
+.user-aero-modal-select:focus {
+  border-color: #5a9dd0;
+  box-shadow:
+    0 0 0 2px rgba(70, 153, 213, 0.16),
+    0 1px 2px #315b7810 inset;
+}
+
+.user-aero-form-group select[multiple],
+.user-aero-modal-select[multiple] {
+  min-height: 78px;
+  padding: 4px;
+  background: #fff;
+}
+
+.user-aero-form-group select[multiple] option,
+.user-aero-modal-select[multiple] option {
+  padding: 5px 7px;
+  border-radius: 2px;
+}
+
+.user-aero-form-group select[multiple] option:checked,
+.user-aero-modal-select[multiple] option:checked {
+  background: linear-gradient(#dcefff, #b6dcf8);
+  color: #17486c;
+}
+
+.user-aero-branch-group {
+  grid-column: span 2;
+}
+
+.user-aero-help {
+  margin: 0;
+  color: #70889c;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.user-aero-create-actions {
+  display: flex;
+  align-items: end;
+  min-width: 0;
+}
+
+/* ===== Glossy Aero buttons ===== */
+
+.user-aero-create-button,
+.user-aero-edit-button,
+.user-aero-modal-button,
+.user-aero-secondary-button,
+.user-aero-refresh-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 6px 11px;
+  border: 1px solid #88b4d5;
+  border-radius: 4px;
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #f0f9ff 26%,
+    #d3eafa 65%,
+    #b5d9f1 100%
+  );
+  color: #194e75;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.35;
+  text-shadow: 0 1px 0 #fff;
+  box-shadow:
+    0 1px 0 #fff inset,
+    0 1px 2px #204f7217;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.user-aero-create-button {
+  width: 100%;
+  min-height: 34px;
+  white-space: nowrap;
+}
+
+.user-aero-create-button:hover,
+.user-aero-edit-button:hover,
+.user-aero-modal-button:hover,
+.user-aero-refresh-button:hover {
+  border-color: #5b9bca;
+  background: linear-gradient(#fff, #e4f5ff 30%, #b8def8 100%);
+}
+
+.user-aero-secondary-button {
+  border-color: #b4c5d2;
+  background: linear-gradient(#fff, #f1f5f8);
+  color: #516a7d;
+}
+
+.user-aero-secondary-button:hover {
+  background: linear-gradient(#fff, #e7f0f7);
+  border-color: #91afc5;
+}
+
+.user-aero-create-button:active,
+.user-aero-edit-button:active,
+.user-aero-modal-button:active,
+.user-aero-secondary-button:active {
+  background: linear-gradient(#b8d9f0, #e8f6ff);
+  box-shadow: 0 1px 3px #214e6c1a inset;
+}
+
+.user-aero-create-button:disabled,
+.user-aero-edit-button:disabled,
+.user-aero-modal-button:disabled,
+.user-aero-secondary-button:disabled,
+.user-aero-refresh-button:disabled {
+  opacity: 0.58;
+  cursor: not-allowed;
+}
+
+.user-aero-button-spinner,
+.user-aero-loader {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #8ab7d5;
+  border-top-color: #216ca4;
+  border-radius: 50%;
+  animation: user-aero-spin 0.8s linear infinite;
+}
+
+@keyframes user-aero-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===== Users toolbar ===== */
+
+.user-aero-users-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-aero-users-heading {
+  flex-shrink: 0;
+}
+
+.user-aero-users-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.user-aero-count {
+  padding: 5px 9px;
+  border: 1px solid #bad3e6;
+  border-radius: 12px;
+  background: linear-gradient(#fff, #e5f2fb);
+  color: #416985;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.user-aero-refresh-button {
+  width: 30px;
+  min-width: 30px;
+  height: 30px;
+  padding: 0;
+  font-size: 19px;
+}
+
+/* ===== Table ===== */
+
+.user-aero-table-wrapper {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: auto;
+  border: 1px solid #a9c5d9;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.8);
+  scrollbar-color: #aac8df #edf5fa;
+  scrollbar-width: thin;
+}
+
+.user-aero-table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: #2b4b65;
+  font-size: 11px;
+  text-align: left;
+}
+
+.user-aero-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 10px 11px;
+  border-right: 1px solid #fff9;
+  border-bottom: 1px solid #95bad5;
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #edf7ff 25%,
+    #d8edfc 65%,
+    #c6e2f7 100%
+  );
+  color: #204e72;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+  text-shadow: 0 1px #fff;
+}
+
+.user-aero-table thead th:last-child {
+  border-right: 0;
+}
+
+.user-aero-table tbody tr {
+  background: rgba(255, 255, 255, 0.88);
+  transition: background 0.12s ease;
+}
+
+.user-aero-table tbody tr:nth-child(even) {
+  background: rgba(232, 243, 251, 0.85);
+}
+
+.user-aero-table tbody tr:hover {
+  background: #d9efff;
+}
+
+.user-aero-table tbody td {
+  padding: 8px 11px;
+  border-right: 1px solid #e2edf5;
+  border-bottom: 1px solid #dce8f1;
+  vertical-align: middle;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.user-aero-table tbody td:last-child {
+  border-right: 0;
+}
+
+.user-aero-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* User identity */
+
+.user-aero-identity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 120px;
+}
+
+.user-aero-avatar,
+.user-aero-modal-avatar {
+  display: grid;
+  place-items: center;
+  width: 29px;
+  height: 29px;
+  flex: 0 0 29px;
+  border: 1px solid #9ebfda;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #fff, #c8e5f9);
+  color: #205c88;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 1px 0 #fff inset;
+}
+
+.user-aero-identity-name {
+  color: #244966;
+  font-weight: 600;
+}
+
+.user-aero-email {
+  min-width: 150px;
+  color: #50718a;
+}
+
+/* Role labels */
+
+.user-aero-role {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border: 1px solid #b9d1e4;
+  border-radius: 3px;
+  background: linear-gradient(#fff, #e5f1fa);
+  color: #365f7e;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.user-aero-role-manager {
+  border-color: #c9b7e7;
+  background: linear-gradient(#fff, #eee5fc);
+  color: #6a4e94;
+}
+
+.user-aero-role-employee {
+  border-color: #b5d4e9;
+  background: linear-gradient(#fff, #e2f2fc);
+  color: #31688c;
+}
+
+.user-aero-branch-list {
+  min-width: 120px;
+  max-width: 310px;
+  line-height: 1.5;
+}
+
+/* Account status */
+
+.user-aero-user-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.user-aero-user-status > span {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border-radius: 50%;
+}
+
+.user-aero-status-active {
+  color: #2d7943;
+}
+
+.user-aero-status-active > span {
+  border: 1px solid #479c5d;
+  background: #69d17c;
+}
+
+.user-aero-status-inactive {
+  color: #8a5d5d;
+}
+
+.user-aero-status-inactive > span {
+  border: 1px solid #bd7777;
+  background: #e99a9a;
+}
+
+.user-aero-edit-button {
+  min-height: 28px;
+  padding: 5px 9px;
+  white-space: nowrap;
+}
+
+.user-aero-table-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 31px;
+  padding: 8px 2px 0;
+  color: #72899c;
+  font-size: 10px;
+}
+
+.user-aero-footer-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== Loading / empty states ===== */
+
+.user-aero-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 100px;
+  padding: 20px;
+  color: #5e7c94;
+  font-size: 12px;
+}
+
+.user-aero-empty {
+  flex-direction: column;
+  gap: 7px;
+  min-height: 150px;
+}
+
+.user-aero-empty strong {
+  color: #315c7b;
+  font-size: 13px;
+}
+
+.user-aero-empty-icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid #b3d0e5;
+  border-radius: 50%;
+  background: linear-gradient(#fff, #d8edfc);
+  color: #5484a6;
+  font-size: 23px;
+}
+
+/* ===== Windows 7 Aero modal ===== */
+
+.user-aero-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+  background: rgba(12, 32, 51, 0.48);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+.user-aero-modal {
+  width: min(100%, 500px);
+  max-height: min(86vh, 720px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #f7fcff;
+  border-radius: 7px;
+  background: linear-gradient(145deg, #f8fcff, #dceefa);
+  box-shadow:
+    0 0 0 1px #6798ba99,
+    0 15px 45px #081d30 55,
+    0 1px 0 #fff inset;
+}
+
+.user-aero-modal-titlebar {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 43px;
+  padding: 7px 9px 7px 12px;
+  border-bottom: 1px solid #94b9d4;
+  background: linear-gradient(
+    180deg,
+    #fff 0%,
+    #edf8ff 28%,
+    #cce6f9 72%,
+    #afd5f0 100%
+  );
+  box-shadow: 0 1px 0 #fff inset;
+}
+
+.user-aero-modal-titlebar-icon {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  border: 1px solid #a3c6e1;
+  border-radius: 4px;
+  background: linear-gradient(#fff, #cce7fa);
+  color: #236696;
+}
+
+.user-aero-modal-window-title {
+  flex: 1;
+  min-width: 0;
+  color: #204d70;
+  font-size: 12px;
+  font-weight: 600;
+  text-shadow: 0 1px #fff;
+}
+
+.user-aero-modal-close {
+  display: grid;
+  place-items: center;
+  width: 29px;
+  height: 26px;
+  flex: 0 0 29px;
+  border: 1px solid #c28a8a;
+  border-radius: 3px;
+  background: linear-gradient(#fff, #f4dada 50%, #e9b3b3);
+  color: #803333;
+  font-size: 19px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.user-aero-modal-close:hover {
+  background: linear-gradient(#fff, #f4c4c4, #df9292);
+}
+
+.user-aero-modal-content {
+  padding: 17px;
+  overflow-y: auto;
+}
+
+.user-aero-modal-intro {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #cbdde9;
+}
+
+.user-aero-modal-avatar {
+  width: 40px;
+  height: 40px;
+  flex-basis: 40px;
+  font-size: 16px;
+}
+
+.user-aero-modal-intro h2 {
+  margin: 0;
+  color: #204f76;
+  font-size: 17px;
+  font-weight: 400;
+}
+
+.user-aero-modal-intro p {
+  margin: 4px 0 0;
+  color: #607c92;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.user-aero-modal-intro p strong {
+  color: #284d69;
+}
+
+.user-aero-modal-select {
+  min-height: 150px !important;
+  background: #fff !important;
+}
+
+.user-aero-modal-summary {
+  margin-top: 10px;
+  padding: 8px 10px;
+  border: 1px solid #c1d9e9;
+  border-radius: 4px;
+  background: #edf7fe;
+  color: #476b85;
+  font-size: 11px;
+}
+
+.user-aero-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  margin-top: 17px;
+  padding-top: 13px;
+  border-top: 1px solid #cbdde9;
+}
+
+.user-aero-modal-actions button {
+  min-width: 105px;
+  min-height: 34px;
+}
+
+/* ===== Tablet ===== */
+
+@media (max-width: 1250px) {
+  .user-aero-create-form {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .user-aero-branch-group {
+    grid-column: span 2;
+  }
+}
+
+/* ===== Mobile ===== */
+
+@media (max-width: 700px) {
+  .user-aero-page {
+    padding: 8px 7px 12px;
+  }
+
+  .user-aero-header {
+    min-height: 62px;
+    gap: 9px;
+    padding: 10px;
+  }
+
+  .user-aero-heading-icon {
+    width: 35px;
+    height: 35px;
+    flex-basis: 35px;
+    font-size: 14px;
+  }
+
+  .user-aero-title {
+    font-size: 18px;
+  }
+
+  .user-aero-subtitle {
+    font-size: 10px;
+  }
+
+  .user-aero-header-meta {
+    display: none;
+  }
+
+  .user-aero-panel {
+    margin-bottom: 10px;
+    padding: 11px;
+  }
+
+  .user-aero-panel-heading {
+    gap: 8px;
+    margin-bottom: 11px;
+    padding-bottom: 9px;
+  }
+
+  .user-aero-panel-icon {
+    width: 27px;
+    height: 27px;
+    flex-basis: 27px;
+  }
+
+  .user-aero-panel-title {
+    font-size: 14px;
+  }
+
+  .user-aero-panel-subtitle {
+    font-size: 10px;
+  }
+
+  .user-aero-create-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 11px 9px;
+  }
+
+  .user-aero-branch-group {
+    grid-column: 1 / -1;
+  }
+
+  .user-aero-form-group input,
+  .user-aero-form-group select {
+    min-height: 37px;
+    font-size: 13px;
+  }
+
+  .user-aero-form-group select[multiple] {
+    min-height: 100px;
+  }
+
+  .user-aero-create-actions {
+    grid-column: 1 / -1;
+  }
+
+  .user-aero-create-button {
+    min-height: 38px;
+    font-size: 12px;
+  }
+
+  .user-aero-users-heading {
+    flex-wrap: wrap;
+  }
+
+  .user-aero-users-tools {
+    margin-left: auto;
+  }
+
+  .user-aero-table {
+    min-width: 740px;
+  }
+
+  .user-aero-table thead th {
+    padding: 9px;
+  }
+
+  .user-aero-table tbody td {
+    padding: 8px 9px;
+  }
+
+  .user-aero-table-footer {
+    font-size: 9px;
+  }
+
+  .user-aero-modal-overlay {
+    padding: 10px;
+  }
+
+  .user-aero-modal {
+    max-height: 90vh;
+  }
+
+  .user-aero-modal-content {
+    padding: 13px;
+  }
+
+  .user-aero-modal-actions button {
+    min-height: 39px;
+  }
+}
+
+/* Small phones */
+
+@media (max-width: 380px) {
+  .user-aero-page {
+    padding: 6px;
+  }
+
+  .user-aero-header {
+    padding: 9px;
+  }
+
+  .user-aero-heading-icon {
+    display: none;
+  }
+
+  .user-aero-title {
+    font-size: 17px;
+  }
+
+  .user-aero-panel {
+    padding: 9px;
+  }
+
+  .user-aero-create-form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .user-aero-branch-group,
+  .user-aero-create-actions {
+    grid-column: auto;
+  }
+
+  .user-aero-users-heading {
+    align-items: flex-start;
+  }
+
+  .user-aero-users-tools {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .user-aero-modal-overlay {
+    padding: 6px;
+  }
+
+  .user-aero-modal-intro h2 {
+    font-size: 15px;
+  }
+
+  .user-aero-modal-actions {
+    flex-direction: column-reverse;
+  }
+
+  .user-aero-modal-actions button {
+    width: 100%;
+  }
+}
+
+/* Accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+  .user-aero-page *,
+  .user-aero-page *::before,
+  .user-aero-page *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+
+/* ==========================================
+   COMPACT CREATE USER — AERO
+========================================== */
+
+.user-aero-page > .user-aero-panel:first-of-type {
+  padding: 11px 14px;
+}
+
+/* Compact section heading */
+.user-aero-page > .user-aero-panel:first-of-type
+.user-aero-panel-heading {
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+}
+
+/* Align fields and button on one row when space allows */
+.user-aero-create-form {
+  display: grid;
+  grid-template-columns:
+    minmax(130px, 1.1fr)
+    minmax(170px, 1.35fr)
+    minmax(130px, 1.1fr)
+    minmax(110px, 0.8fr)
+    minmax(190px, 1.5fr)
+    minmax(120px, 0.85fr);
+  align-items: start;
+  gap: 10px;
+}
+
+/* Consistent labels */
+.user-aero-create-form .user-aero-form-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 4px;
+}
+
+.user-aero-create-form .user-aero-form-group label {
+  min-height: 15px;
+  margin: 0;
+  font-size: 10px;
+  line-height: 15px;
+}
+
+/* Smaller inputs */
+.user-aero-create-form .user-aero-form-group input,
+.user-aero-create-form .user-aero-form-group select:not([multiple]) {
+  width: 100%;
+  min-width: 0;
+  height: 32px;
+  min-height: 32px;
+  padding: 5px 7px;
+  font-size: 11px;
+}
+
+/* Branch selector stays aligned with the other fields */
+.user-aero-create-form .user-aero-branch-group {
+  grid-column: auto;
+}
+
+.user-aero-create-form .user-aero-branch-group select[multiple] {
+  height: 58px;
+  min-height: 58px;
+  padding: 3px;
+  font-size: 11px;
+}
+
+.user-aero-create-form .user-aero-help {
+  margin-top: 3px;
+  font-size: 9px;
+  line-height: 1.3;
+}
+
+/* Create button aligns to the form fields */
+.user-aero-create-actions {
+  display: flex;
+  align-self: start;
+  min-width: 0;
+  padding-top: 19px;
+}
+
+.user-aero-create-button {
+  width: 100%;
+  height: 32px;
+  min-height: 32px;
+  padding: 5px 7px;
+  white-space: nowrap;
+  font-size: 10px;
+}
+
+/* Medium desktop and tablets */
+@media (max-width: 1450px) {
+  .user-aero-create-form {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px 12px;
+  }
+
+  .user-aero-create-form .user-aero-branch-group {
+    grid-column: span 2;
+  }
+
+  .user-aero-create-actions {
+    padding-top: 19px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+  .user-aero-page > .user-aero-panel:first-of-type {
+    padding: 10px;
+  }
+
+  .user-aero-create-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .user-aero-create-form .user-aero-branch-group {
+    grid-column: 1 / -1;
+  }
+
+  .user-aero-create-form .user-aero-form-group label {
+    min-height: auto;
+  }
+
+  .user-aero-create-form .user-aero-form-group input,
+  .user-aero-create-form .user-aero-form-group select:not([multiple]) {
+    height: 36px;
+    min-height: 36px;
+    font-size: 12px;
+  }
+
+  .user-aero-create-form .user-aero-branch-group select[multiple] {
+    height: 76px;
+    min-height: 76px;
+  }
+
+  .user-aero-create-actions {
+    grid-column: 1 / -1;
+    padding-top: 0;
+  }
+
+  .user-aero-create-button {
+    height: 37px;
+    min-height: 37px;
+    font-size: 12px;
+  }
+}
+
+/* Very narrow phones */
+@media (max-width: 380px) {
+  .user-aero-create-form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .user-aero-create-form .user-aero-branch-group,
+  .user-aero-create-actions {
+    grid-column: auto;
+  }
+}
