@@ -61,7 +61,7 @@ const Dashboard = () => {
   const [branches, setBranches] = useState([]);
   const [branchId, setBranchId] = useState("");
 
-  const [filtersOpen, setFiltersOpen] = useState(false);
+
 
   useEffect(() => {
     let cancelled = false;
@@ -170,23 +170,6 @@ const Dashboard = () => {
     closed: summary.closedComplaints || 0,
   }[activeSection];
 
-  const summaryCards = [
-    {
-      label: "Open",
-      value: summary.openComplaints || 0,
-      type: "open",
-    },
-    {
-      label: "Pending",
-      value: summary.pending ?? summary.notConnected ?? 0,
-      type: "pending",
-    },
-    {
-      label: "Closed",
-      value: summary.closedComplaints || 0,
-      type: "closed",
-    },
-  ];
 
   return (
     <div className="psfd-dashboard">

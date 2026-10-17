@@ -16,7 +16,7 @@ const PSFTable = ({ records, onSelectRecord, page, limit }) => {
     <div className="psft-wrapper">
       <table className="psft-table">
         <thead>
-          <tr>
+          <tr >
             <th>Sl No.</th>
             <th>RO Number</th>
             <th>Bill Date</th>
@@ -39,7 +39,7 @@ const PSFTable = ({ records, onSelectRecord, page, limit }) => {
 
         <tbody>
           {records.map((record, index) => (
-            <tr key={record._id}>
+            <tr key={record._id}  onClick={() => onSelectRecord(record)}>
               <td className="psft-number">
                 {(page - 1) * limit + index + 1}
               </td>
