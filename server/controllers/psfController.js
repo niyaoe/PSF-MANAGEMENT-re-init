@@ -514,41 +514,46 @@ const getPSFDashboard = async (req, res) => {
         .lean(),
     ]);
 
-    // Concern breakdown for the currently selected tab.
-    const concernCountsRaw = await PSFRecord.aggregate([
-      { $match: filter },
-      {
-        $group: {
-          _id: "$typeOfConcern",
-          count: { $sum: 1 },
-        },
-      },
-    ]);
+    // Concern breakdown for the selected tab.
+    // Use a Mongoose find query so branch IDs and other filter values
+    // are cast correctly before querying MongoDB.
+    const concernRecords = await PSFRecord.find(filter)
+      .select("typeOfConcern")
+      .lean();
 
-    const concernIds = concernCountsRaw
-      .filter((item) => item._id)
-      .map((item) => item._id);
+    const concernCountMap = new Map();
+
+    for (const record of concernRecords) {
+      if (!record.typeOfConcern) continue;
+
+      const concernId = record.typeOfConcern.toString();
+
+      concernCountMap.set(
+        concernId,
+        (concernCountMap.get(concernId) || 0) + 1
+      );
+    }
+
+    const concernIds = [...concernCountMap.keys()];
 
     const concernDetails = concernIds.length
       ? await TypeOfConcern.find({
-          _id: { $in: concernIds },
-        })
-          .select("name section")
-          .lean()
+        _id: { $in: concernIds },
+      })
+        .select("name section")
+        .lean()
       : [];
 
     const concernMap = new Map(
-      concernDetails.map((item) => [
-        item._id.toString(),
-        item,
-      ]),
+      concernDetails.map((concern) => [
+        concern._id.toString(),
+        concern,
+      ])
     );
 
-    const concernCounts = concernCountsRaw
-      .map((item) => {
-        const concern = item._id
-          ? concernMap.get(item._id.toString())
-          : null;
+    const concernCounts = concernIds
+      .map((concernId) => {
+        const concern = concernMap.get(concernId);
 
         if (!concern) return null;
 
@@ -556,7 +561,7 @@ const getPSFDashboard = async (req, res) => {
           _id: concern._id,
           name: concern.name,
           section: concern.section,
-          count: item.count,
+          count: concernCountMap.get(concernId),
         };
       })
       .filter(Boolean)
