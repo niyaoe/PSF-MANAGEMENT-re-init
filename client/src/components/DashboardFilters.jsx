@@ -49,7 +49,7 @@ const DashboardFilters = ({
         />
       )}
 
-      <div className="aero-filter-group">
+      {/* <div className="aero-filter-group">
         <label>Complaint Status</label>
 
         <select
@@ -81,7 +81,7 @@ const DashboardFilters = ({
 
           <option value="false">Connected</option>
         </select>
-      </div>
+      </div> */}
 
       <div className="aero-filter-group">
         <label>Bill Date From</label>

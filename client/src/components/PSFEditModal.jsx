@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import api from "../services/api";
-import "../styles/psfEditModal.css";
+import "./psfEditModal.css";
 
 const PSFEditModal = ({ record, onClose, onSaveSuccess }) => {
   const [formData, setFormData] = useState({
@@ -263,18 +263,29 @@ const PSFEditModal = ({ record, onClose, onSaveSuccess }) => {
                         Editable Form
                     ================================= */}
 
-          <div className="psf-edit-aero-form">
+          <form
+            className="psf-edit-aero-form"
+            onSubmit={(event) => {
+              event.preventDefault();
+              handleSave();
+            }}
+          >
             <div className="psf-edit-aero-fields">
               {/* Owner Mobile */}
 
               <div className="psf-edit-aero-field">
-                <label>Owner Mobile</label>
+                <label>
+                  Owner Mobile <span className="psf-required" aria-hidden="true">*</span>
+                </label>
 
                 <input
                   type="text"
                   name="ownerMobile"
                   value={formData.ownerMobile}
                   onChange={handleChange}
+                  required
+                  aria-required="true"
+                  autoComplete="tel"
                 />
               </div>
               {/* Pincode*/}
@@ -295,13 +306,17 @@ const PSFEditModal = ({ record, onClose, onSaveSuccess }) => {
               {/* 1st Call Date */}
 
               <div className="psf-edit-aero-field">
-                <label>1st Call Date</label>
+                <label>
+                  1st Call Date <span className="psf-required" aria-hidden="true">*</span>
+                </label>
 
                 <input
                   type="date"
                   name="firstCallDate"
                   value={formData.firstCallDate}
                   onChange={handleChange}
+                  required
+                  aria-required="true"
                 />
               </div>
 
@@ -623,8 +638,7 @@ const PSFEditModal = ({ record, onClose, onSaveSuccess }) => {
             <div className="psf-edit-aero-actions">
               <button
                 className="psf-edit-aero-button"
-                type="button"
-                onClick={handleSave}
+                type="submit"
                 disabled={saving}
               >
                 {saving ? "Saving..." : "Save Changes"}
@@ -640,8 +654,8 @@ const PSFEditModal = ({ record, onClose, onSaveSuccess }) => {
               </button>
             </div>
 
-            {message && <p className="psf-edit-aero-message">{message}</p>}
-          </div>
+            {message && <p className="psf-edit-aero-message" role="status">{message}</p>}
+          </form>
         </div>
       </div>
     </div>

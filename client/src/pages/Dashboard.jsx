@@ -61,6 +61,8 @@ const Dashboard = () => {
   const [branches, setBranches] = useState([]);
   const [branchId, setBranchId] = useState("");
 
+  const [filtersExpanded, setFiltersExpanded] = useState(true);
+
 
 
   useEffect(() => {
@@ -174,41 +176,61 @@ const Dashboard = () => {
   return (
     <div className="psfd-dashboard">
       {/* 1. FILTERS AT THE TOP */}
-      <section className="psfd-filter-section">
-        <div className="psfd-filter-topbar">
-          <span className="psfd-filter-label">FILTERS</span>
+     
+<section className={`psfd-filter-section ${filtersExpanded ? "psfd-filters-expanded" : "psfd-filters-collapsed"}`}>
+  <div className="psfd-filter-topbar">
+    <button
+      type="button"
+      className="psfd-filter-toggle"
+      onClick={() => setFiltersExpanded((prev) => !prev)}
+      aria-expanded={filtersExpanded}
+      aria-controls="psfd-filter-content"
+    >
+      <span className={`psfd-filter-chevron ${filtersExpanded ? "psfd-chevron-open" : ""}`}>
+        ›
+      </span>
+      <span className="psfd-filter-label">FILTERS</span>
+    </button>
 
-          <button
-            type="button"
-            className="psfd-refresh-button"
-            onClick={fetchDashboard}
-            disabled={loading}
-            title="Refresh records"
-          >
-            ↻
-          </button>
-        </div>
+    <button
+      type="button"
+      className="psfd-refresh-button"
+      onClick={fetchDashboard}
+      disabled={loading}
+      title="Refresh records"
+    >
+      ↻
+    </button>
+  </div>
 
-        <DashboardFilters
-          search={search}
-          setSearch={setSearch}
-          complaintStatus={complaintStatus}
-          setComplaintStatus={setComplaintStatus}
-          notConnected={notConnected}
-          setNotConnected={setNotConnected}
-          fromDate={fromDate}
-          setFromDate={setFromDate}
-          toDate={toDate}
-          setToDate={setToDate}
-          onSearch={handleSearch}
-          branches={branches}
-          branchId={branchId}
-          setBranchId={(id) => {
-            setBranchId(id);
-            setPage(1);
-          }}
-        />
-      </section>
+  <div
+    id="psfd-filter-content"
+    className="psfd-filter-content"
+    aria-hidden={!filtersExpanded}
+    inert={!filtersExpanded}
+  >
+    <DashboardFilters
+      search={search}
+      setSearch={setSearch}
+      complaintStatus={complaintStatus}
+      setComplaintStatus={setComplaintStatus}
+      notConnected={notConnected}
+      setNotConnected={setNotConnected}
+      fromDate={fromDate}
+      setFromDate={setFromDate}
+      toDate={toDate}
+      setToDate={setToDate}
+      onSearch={handleSearch}
+      branches={branches}
+      branchId={branchId}
+      setBranchId={(id) => {
+        setBranchId(id);
+        setPage(1);
+      }}
+    />
+  </div>
+</section>
+
 
 
       {/* SECTION TABS WITH COLORED COUNTS */}

@@ -680,3 +680,84 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+
+
+/* collapse filter  */
+
+
+/* Smoothly collapsible dashboard filters */
+.psfd-filter-section {
+  min-width: 0;
+}
+
+.psfd-filter-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.psfd-filter-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  padding: 5px 0;
+  border: 0;
+  background: transparent;
+  color: #17446c;
+  font: inherit;
+  cursor: pointer;
+}
+
+.psfd-filter-toggle:hover {
+  color: #0878c9;
+}
+
+.psfd-filter-chevron {
+  display: inline-block;
+  font-size: 20px;
+  line-height: 1;
+  transform: rotate(0deg);
+  transition: transform 240ms ease;
+}
+
+.psfd-filter-chevron.psfd-chevron-open {
+  transform: rotate(90deg);
+}
+
+.psfd-filter-label {
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.psfd-filter-content {
+  display: grid;
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition:
+    grid-template-rows 280ms ease,
+    opacity 200ms ease,
+    margin-top 280ms ease;
+  margin-top: 10px;
+}
+
+.psfd-filter-content > * {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.psfd-filters-collapsed .psfd-filter-content {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  margin-top: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .psfd-filter-content,
+  .psfd-filter-chevron {
+    transition: none;
+  }
+}
