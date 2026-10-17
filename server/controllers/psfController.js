@@ -209,6 +209,7 @@ const updatePSFRecord = async (req, res) => {
   }
 };
 
+
 const getPSFDashboard = async (req, res) => {
   try {
     const {
@@ -218,56 +219,29 @@ const getPSFDashboard = async (req, res) => {
       fromDate,
       toDate,
       search,
+      section,
       page = 1,
       limit = 20,
     } = req.query;
 
-    let filter = {};
+    const allowedSections = ["open", "pending", "closed"];
 
-    if (search?.trim()) {
-      filter.$or = [
-        {
-          roNumber: {
-            $regex: search.trim(),
-            $options: "i",
-          },
-        },
-        {
-          customerName: {
-            $regex: search.trim(),
-            $options: "i",
-          },
-        },
-        {
-          registrationNumber: {
-            $regex: search.trim(),
-            $options: "i",
-          },
-        },
-        {
-          chassisNumber: {
-            $regex: search.trim(),
-            $options: "i",
-          },
-        },
-        {
-          userName: {
-            $regex: search.trim(),
-            $options: "i",
-          },
-        },
-        {
-          ownerMobile: {
-            $regex: search,
-            $options: "i",
-          },
-        },
-      ];
+    if (section && !allowedSections.includes(section.toLowerCase())) {
+      return res.status(400).json({
+        message: "Invalid dashboard section",
+      });
     }
 
-    /*
-     * Branch access
-     */
+    // Pagination validation
+    const currentPage = Math.max(parseInt(page, 10) || 1, 1);
+    const recordsPerPage = Math.min(
+      Math.max(parseInt(limit, 10) || 20, 1),
+      100,
+    );
+    const skip = (currentPage - 1) * recordsPerPage;
+
+    // Branch access restrictions
+    const baseFilter = {};
 
     if (req.user.role === "admin") {
       if (branchId) {
@@ -277,7 +251,7 @@ const getPSFDashboard = async (req, res) => {
           });
         }
 
-        filter.branchId = branchId;
+        baseFilter.branchId = branchId;
       }
     } else {
       if (
@@ -297,7 +271,7 @@ const getPSFDashboard = async (req, res) => {
         }
 
         const hasAccess = req.user.branchIds.some(
-          (assignedBranchId) => assignedBranchId.toString() === branchId,
+          (id) => id.toString() === branchId,
         );
 
         if (!hasAccess) {
@@ -306,140 +280,287 @@ const getPSFDashboard = async (req, res) => {
           });
         }
 
-        filter.branchId = branchId;
+        baseFilter.branchId = branchId;
       } else {
-        filter.branchId = {
+        baseFilter.branchId = {
           $in: req.user.branchIds,
         };
       }
     }
 
-    /*
-     * Complaint status filter
-     */
+    // Build independent conditions so search and other filters
+    // cannot overwrite one another.
+    const commonConditions = [];
 
-    if (complaintStatus) {
-      if (complaintStatus.toLowerCase() === "open") {
-        filter.$or = [
+    // Escape regular-expression characters in search text
+    if (search?.trim()) {
+      const escapedSearch = search
+        .trim()
+        .replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+      commonConditions.push({
+        $or: [
+          { roNumber: { $regex: escapedSearch, $options: "i" } },
+          { customerName: { $regex: escapedSearch, $options: "i" } },
           {
-            complaintStatus: "Open",
-          },
-          {
-            complaintStatus: "",
-          },
-          {
-            complaintStatus: null,
-          },
-          {
-            complaintStatus: {
-              $exists: false,
+            registrationNumber: {
+              $regex: escapedSearch,
+              $options: "i",
             },
           },
-        ];
+          {
+            chassisNumber: {
+              $regex: escapedSearch,
+              $options: "i",
+            },
+          },
+          { userName: { $regex: escapedSearch, $options: "i" } },
+          { ownerMobile: { $regex: escapedSearch, $options: "i" } },
+        ],
+      });
+    }
+
+    // Existing complaint-status filter
+    if (complaintStatus) {
+      if (complaintStatus.toLowerCase() === "open") {
+        commonConditions.push({
+          $or: [
+            { complaintStatus: /^open$/i },
+            { complaintStatus: "" },
+            { complaintStatus: null },
+            { complaintStatus: { $exists: false } },
+          ],
+        });
       } else {
-        filter.complaintStatus = complaintStatus;
+        commonConditions.push({
+          complaintStatus: new RegExp(
+            `^${complaintStatus.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`,
+            "i",
+          ),
+        });
       }
     }
 
-    /*
-     * Not connected filter
-     *
-     * firstCallDate is empty or does not exist
-     */
+    // Existing not-connected filter
+    const emptyFirstCallDate = {
+      $or: [
+        { firstCallDate: { $exists: false } },
+        { firstCallDate: null },
+        { firstCallDate: "" },
+      ],
+    };
 
     if (notConnected === "true") {
-      filter.$and = [
-        {
-          $or: [
-            {
-              firstCallDate: {
-                $exists: false,
-              },
-            },
-            {
-              firstCallDate: null,
-            },
-            {
-              firstCallDate: "",
-            },
-          ],
+      commonConditions.push(emptyFirstCallDate);
+    } else if (notConnected === "false") {
+      commonConditions.push({
+        firstCallDate: {
+          $exists: true,
+          $nin: [null, ""],
         },
-      ];
+      });
     }
 
-    if (notConnected === "false") {
-      filter.$and = [
-        {
-          firstCallDate: {
-            $exists: true,
-            $nin: [null, ""],
-          },
-        },
-      ];
-    }
-
-    /*
-     * Bill date range filter
-     */
-
+    // Bill date range filter
     if (fromDate || toDate) {
-      filter.billDate = {};
+      const billDateFilter = {};
+
+      const parseDateOnly = (value) => {
+        if (!value) return null;
+
+        const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+
+        if (!match) return new Date(NaN);
+
+        const date = new Date(
+          Number(match[1]),
+          Number(match[2]) - 1,
+          Number(match[3]),
+        );
+
+        if (
+          date.getFullYear() !== Number(match[1]) ||
+          date.getMonth() !== Number(match[2]) - 1 ||
+          date.getDate() !== Number(match[3])
+        ) {
+          return new Date(NaN);
+        }
+
+        return date;
+      };
 
       if (fromDate) {
-        filter.billDate.$gte = new Date(fromDate);
+        const startDate = parseDateOnly(fromDate);
+
+        if (!startDate || isNaN(startDate.getTime())) {
+          return res.status(400).json({
+            message: "Invalid fromDate. Use YYYY-MM-DD.",
+          });
+        }
+
+        billDateFilter.$gte = startDate;
       }
 
       if (toDate) {
-        const endDate = new Date(toDate);
-        endDate.setHours(23, 59, 59, 999);
+        const endDate = parseDateOnly(toDate);
 
-        filter.billDate.$lte = endDate;
+        if (!endDate || isNaN(endDate.getTime())) {
+          return res.status(400).json({
+            message: "Invalid toDate. Use YYYY-MM-DD.",
+          });
+        }
+
+        endDate.setHours(23, 59, 59, 999);
+        billDateFilter.$lte = endDate;
       }
+
+      if (
+        billDateFilter.$gte &&
+        billDateFilter.$lte &&
+        billDateFilter.$gte > billDateFilter.$lte
+      ) {
+        return res.status(400).json({
+          message: "fromDate cannot be after toDate",
+        });
+      }
+
+      commonConditions.push({ billDate: billDateFilter });
     }
 
-    const currentPage = Math.max(parseInt(page) || 1, 1);
+    // Find concern IDs by their configured sections.
+    // The section names are matched case-insensitively.
+    const [openConcerns, pendingConcerns, closedConcerns] =
+      await Promise.all([
+        TypeOfConcern.find({ section: /^open$/i }).select("_id").lean(),
+        TypeOfConcern.find({ section: /^pending$/i }).select("_id").lean(),
+        TypeOfConcern.find({ section: /^closed$/i }).select("_id").lean(),
+      ]);
 
-    const recordsPerPage = Math.min(Math.max(parseInt(limit) || 20, 1), 100);
+    const openConcernIds = openConcerns.map((item) => item._id);
+    const pendingConcernIds = pendingConcerns.map((item) => item._id);
+    const closedConcernIds = closedConcerns.map((item) => item._id);
 
-    const skip = (currentPage - 1) * recordsPerPage;
+    // The rules below intentionally preserve your OR/AND requirements.
+    const sectionConditions = {
+      closed: {
+        $or: [
+          { complaintStatus: /^closed$/i },
+          { typeOfConcern: { $in: closedConcernIds } },
+        ],
+      },
 
-    const totalRecords = await PSFRecord.countDocuments(filter);
+      open: {
+        $and: [
+          { complaintStatus: /^open$/i },
+          { typeOfConcern: { $in: openConcernIds } },
+        ],
+      },
 
-    /*
-     * Dashboard records
-     */
+      pending: {
+        $or: [
+          emptyFirstCallDate,
+          { typeOfConcern: { $in: pendingConcernIds } },
+        ],
+      },
+    };
 
-    const records = await PSFRecord.find(filter)
-      .populate("branchId", "name code")
-      .sort({ billDate: -1 })
-      .skip(skip)
-      .limit(recordsPerPage);
+    // Compose filters without losing any existing conditions.
+    const buildFilter = (extraConditions = []) => ({
+      $and: [
+        baseFilter,
+        ...commonConditions,
+        ...extraConditions,
+      ],
+    });
 
-    /*
-     * Summary
-     */
+    // Tab counts use all common filters but are independent
+    // of which tab is currently selected.
+    const [
+      openComplaints,
+      pending,
+      closedComplaints,
+    ] = await Promise.all([
+      PSFRecord.countDocuments(
+        buildFilter([sectionConditions.open]),
+      ),
+      PSFRecord.countDocuments(
+        buildFilter([sectionConditions.pending]),
+      ),
+      PSFRecord.countDocuments(
+        buildFilter([sectionConditions.closed]),
+      ),
+    ]);
 
-    // const totalRecords = records.length;
+    // Filter records for the selected tab.
+    const selectedSection = section
+      ? section.toLowerCase()
+      : null;
 
-    const summaryRecords = await PSFRecord.find(filter)
-      .select("complaintStatus firstCallDate typeOfConcern")
-      .populate("typeOfConcern", "name section");
+    const selectedConditions = selectedSection
+      ? [sectionConditions[selectedSection]]
+      : [];
 
-    const openComplaints = summaryRecords.filter((record) => {
-      const status = record.complaintStatus?.trim().toLowerCase();
+    const filter = buildFilter(selectedConditions);
 
-      return status === "open" || !status;
-    }).length;
+    const [totalRecords, records] = await Promise.all([
+      PSFRecord.countDocuments(filter),
 
-    const closedComplaints = summaryRecords.filter(
-      (record) => record.complaintStatus?.trim().toLowerCase() === "closed",
-    ).length;
+      PSFRecord.find(filter)
+        .populate("branchId", "name code")
+        .populate("typeOfConcern", "name section")
+        .sort({ billDate: -1, _id: -1 })
+        .skip(skip)
+        .limit(recordsPerPage)
+        .lean(),
+    ]);
 
-    const notConnectedRecords = summaryRecords.filter(
-      (record) => !record.firstCallDate,
-    ).length;
+    // Concern breakdown for the currently selected tab.
+    const concernCountsRaw = await PSFRecord.aggregate([
+      { $match: filter },
+      {
+        $group: {
+          _id: "$typeOfConcern",
+          count: { $sum: 1 },
+        },
+      },
+    ]);
 
-    const connectedRecords = totalRecords - notConnectedRecords;
+    const concernIds = concernCountsRaw
+      .filter((item) => item._id)
+      .map((item) => item._id);
+
+    const concernDetails = concernIds.length
+      ? await TypeOfConcern.find({
+          _id: { $in: concernIds },
+        })
+          .select("name section")
+          .lean()
+      : [];
+
+    const concernMap = new Map(
+      concernDetails.map((item) => [
+        item._id.toString(),
+        item,
+      ]),
+    );
+
+    const concernCounts = concernCountsRaw
+      .map((item) => {
+        const concern = item._id
+          ? concernMap.get(item._id.toString())
+          : null;
+
+        if (!concern) return null;
+
+        return {
+          _id: concern._id,
+          name: concern.name,
+          section: concern.section,
+          count: item.count,
+        };
+      })
+      .filter(Boolean)
+      .sort((a, b) => b.count - a.count);
 
     const totalPages = Math.ceil(totalRecords / recordsPerPage);
 
@@ -449,9 +570,9 @@ const getPSFDashboard = async (req, res) => {
       summary: {
         totalRecords,
         openComplaints,
+        pending,
         closedComplaints,
-        notConnected: notConnectedRecords,
-        connected: connectedRecords,
+        concernCounts,
       },
 
       pagination: {
@@ -472,6 +593,7 @@ const getPSFDashboard = async (req, res) => {
     });
   }
 };
+
 
 const getUserHistory = async (req, res) => {
   try {

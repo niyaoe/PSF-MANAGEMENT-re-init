@@ -248,6 +248,16 @@ const importPSFExcel = async (filePath) => {
     calicut: "calicut",
 
     kannur: "kannur",
+
+    MALLAPURAM_MADB: "malappuram",
+
+    mallapuram_madb : "malappuram",
+
+    NEW_NILAMBUR_SZ : "nilambur",
+
+    new_nilambur_sz : "nilambur",
+
+    
   };
 
   const rowsWithBranchId = mappedRows.map((row, index) => {
