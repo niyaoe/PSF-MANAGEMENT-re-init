@@ -62,6 +62,7 @@ const Dashboard = () => {
   const [branchId, setBranchId] = useState("");
 
   const [filtersExpanded, setFiltersExpanded] = useState(true);
+  const [concernSummaryExpanded, setConcernSummaryExpanded] = useState(true);
 
 
 
@@ -176,60 +177,60 @@ const Dashboard = () => {
   return (
     <div className="psfd-dashboard">
       {/* 1. FILTERS AT THE TOP */}
-     
-<section className={`psfd-filter-section ${filtersExpanded ? "psfd-filters-expanded" : "psfd-filters-collapsed"}`}>
-  <div className="psfd-filter-topbar">
-    <button
-      type="button"
-      className="psfd-filter-toggle"
-      onClick={() => setFiltersExpanded((prev) => !prev)}
-      aria-expanded={filtersExpanded}
-      aria-controls="psfd-filter-content"
-    >
-      <span className={`psfd-filter-chevron ${filtersExpanded ? "psfd-chevron-open" : ""}`}>
-        ›
-      </span>
-      <span className="psfd-filter-label">FILTERS</span>
-    </button>
 
-    <button
-      type="button"
-      className="psfd-refresh-button"
-      onClick={fetchDashboard}
-      disabled={loading}
-      title="Refresh records"
-    >
-      ↻
-    </button>
-  </div>
+      <section className={`psfd-filter-section ${filtersExpanded ? "psfd-filters-expanded" : "psfd-filters-collapsed"}`}>
+        <div className="psfd-filter-topbar">
+          <button
+            type="button"
+            className="psfd-filter-toggle"
+            onClick={() => setFiltersExpanded((prev) => !prev)}
+            aria-expanded={filtersExpanded}
+            aria-controls="psfd-filter-content"
+          >
+            <span className={`psfd-filter-chevron ${filtersExpanded ? "psfd-chevron-open" : ""}`}>
+              ›
+            </span>
+            <span className="psfd-filter-label">FILTERS</span>
+          </button>
 
-  <div
-    id="psfd-filter-content"
-    className="psfd-filter-content"
-    aria-hidden={!filtersExpanded}
-    inert={!filtersExpanded}
-  >
-    <DashboardFilters
-      search={search}
-      setSearch={setSearch}
-      complaintStatus={complaintStatus}
-      setComplaintStatus={setComplaintStatus}
-      notConnected={notConnected}
-      setNotConnected={setNotConnected}
-      fromDate={fromDate}
-      setFromDate={setFromDate}
-      toDate={toDate}
-      setToDate={setToDate}
-      onSearch={handleSearch}
-      branches={branches}
-      branchId={branchId}
-      setBranchId={(id) => {
-        setBranchId(id);
-        setPage(1);
-      }}
-    />
-  </div>
-</section>
+          <button
+            type="button"
+            className="psfd-refresh-button"
+            onClick={fetchDashboard}
+            disabled={loading}
+            title="Refresh records"
+          >
+            ↻
+          </button>
+        </div>
+
+        <div
+          id="psfd-filter-content"
+          className="psfd-filter-content"
+          aria-hidden={!filtersExpanded}
+          inert={!filtersExpanded}
+        >
+          <DashboardFilters
+            search={search}
+            setSearch={setSearch}
+            complaintStatus={complaintStatus}
+            setComplaintStatus={setComplaintStatus}
+            notConnected={notConnected}
+            setNotConnected={setNotConnected}
+            fromDate={fromDate}
+            setFromDate={setFromDate}
+            toDate={toDate}
+            setToDate={setToDate}
+            onSearch={handleSearch}
+            branches={branches}
+            branchId={branchId}
+            setBranchId={(id) => {
+              setBranchId(id);
+              setPage(1);
+            }}
+          />
+        </div>
+      </section>
 
 
 
@@ -254,8 +255,8 @@ const Dashboard = () => {
                 role="tab"
                 aria-selected={activeSection === section.id}
                 className={`psfd-section-tab psfd-tab-${section.id} ${activeSection === section.id
-                    ? "psfd-section-tab-active"
-                    : ""
+                  ? "psfd-section-tab-active"
+                  : ""
                   }`}
                 onClick={() => handleSectionChange(section.id)}
               >
@@ -275,38 +276,82 @@ const Dashboard = () => {
           })}
         </div>
       </section>
+
       {/* 4. SUMMARY FOR THE SELECTED SECTION */}
       <section className="psfd-content-panel">
         <div className="psfd-section-summary-header">
           <span>
             {SECTIONS.find((item) => item.id === activeSection)?.label} summary
           </span>
-          <span className="psfd-record-count">
-            {Number(sectionTotal).toLocaleString("en-IN")} records
-          </span>
+
+          <div className="psfd-summary-header-actions">
+            <span className="psfd-record-count">
+              {Number(sectionTotal).toLocaleString("en-IN")} records
+            </span>
+
+            <button
+              type="button"
+              className="psfd-summary-toggle"
+              onClick={() =>
+                setConcernSummaryExpanded((previous) => !previous)
+              }
+              aria-expanded={concernSummaryExpanded}
+              aria-controls="psfd-concern-summary-content"
+              title={
+                concernSummaryExpanded
+                  ? "Collapse concern summary"
+                  : "Expand concern summary"
+              }
+            >
+              <span
+                className={`psfd-summary-chevron ${concernSummaryExpanded ? "psfd-summary-chevron-open" : ""
+                  }`}
+              >
+                ›
+              </span>
+              <span>
+                {concernSummaryExpanded ? "Collapse" : "Expand"}
+              </span>
+            </button>
+          </div>
         </div>
 
-        {summary.concernCounts?.length > 0 ? (
-          <div className="psfd-concern-grid">
-            {summary.concernCounts.map((concern) => (
-              <article
-                className="psfd-concern-card"
-                key={concern._id || concern.name}
-              >
-                <span className="psfd-concern-indicator" />
-                <span className="psfd-concern-name">{concern.name}</span>
-                <strong>
-                  {Number(concern.count || 0).toLocaleString("en-IN")}
-                </strong>
-              </article>
-            ))}
+        <div
+          id="psfd-concern-summary-content"
+          className={`psfd-concern-summary-content ${concernSummaryExpanded
+              ? "psfd-concern-summary-expanded"
+              : "psfd-concern-summary-collapsed"
+            }`}
+          aria-hidden={!concernSummaryExpanded}
+          inert={!concernSummaryExpanded}
+        >
+          <div className="psfd-concern-summary-inner">
+            {summary.concernCounts?.length > 0 ? (
+              <div className="psfd-concern-grid">
+                {summary.concernCounts.map((concern) => (
+                  <article
+                    className="psfd-concern-card"
+                    key={concern._id || concern.name}
+                  >
+                    <span className="psfd-concern-indicator" />
+                    <span className="psfd-concern-name">
+                      {concern.name}
+                    </span>
+                    <strong>
+                      {Number(concern.count || 0).toLocaleString("en-IN")}
+                    </strong>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <div className="psfd-empty-breakdown">
+                No concern summary available.
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="psfd-empty-breakdown">
-            No concern summary available.
-          </div>
-        )}
+        </div>
       </section>
+
 
       {/* 5. RECORDS FOR THE SELECTED SECTION */}
       <section className="psfd-content-panel psfd-records-panel">

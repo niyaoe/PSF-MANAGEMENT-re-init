@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -8,18 +9,15 @@ const Login = () => {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
-
   const [password, setPassword] = useState("");
-
   const [message, setMessage] = useState("");
-
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async (event) => {
     event.preventDefault();
 
     setMessage("");
-
     setLoading(true);
 
     try {
@@ -29,11 +27,9 @@ const Login = () => {
       });
 
       localStorage.setItem("token", response.data.token);
-
       localStorage.setItem("user", JSON.stringify(response.data.user));
 
       setMessage("Login successful");
-
       navigate("/dashboard");
     } catch (error) {
       setMessage(error.response?.data?.message || "Login failed");
@@ -44,12 +40,6 @@ const Login = () => {
 
   return (
     <div className="login-aero-page">
-      {/* Logo */}
-
-      {/* Title */}
-
-      {/* Login Form */}
-
       <form className="login-aero-panel" onSubmit={handleLogin}>
         <div className="login-title-content">
           <img
@@ -57,45 +47,69 @@ const Login = () => {
             src="/logo.png"
             alt="PSF Management"
           />
+
           <h1 className="login-aero-title">PSF Management</h1>
+          {/* <p className="login-aero-subtitle">
+            Post Sale Follow-up Management System
+          </p> */}
         </div>
 
         <div className="login-aero-form-group">
-          <label>Email</label>
+          <label htmlFor="login-email">Email</label>
 
           <input
+            id="login-email"
             className="login-aero-input"
             type="email"
             value={email}
-            onChange={(event) => {
-              setEmail(event.target.value);
-            }}
+            onChange={(event) => setEmail(event.target.value)}
+            autoComplete="username"
             required
           />
         </div>
 
         <div className="login-aero-form-group">
-          <label>Password</label>
+          <label htmlFor="login-password">Password</label>
 
           <input
+            id="login-password"
             className="login-aero-input"
-            type="password"
+            type={showPassword ? "text" : "password"}
             value={password}
-            onChange={(event) => {
-              setPassword(event.target.value);
-            }}
+            onChange={(event) => setPassword(event.target.value)}
+            autoComplete="current-password"
             required
           />
         </div>
 
-        <button className="login-aero-button" type="submit" disabled={loading}>
+        <label className="login-aero-show-password">
+          <input
+            type="checkbox"
+            checked={showPassword}
+            onChange={(event) => setShowPassword(event.target.checked)}
+          />
+          <span>Show password</span>
+        </label>
+
+        <button
+          className="login-aero-button"
+          type="submit"
+          disabled={loading}
+        >
           {loading ? "Logging in..." : "Login"}
         </button>
+
+        {message && (
+          <p
+            className={`login-aero-message ${
+              message === "Login successful" ? "login-aero-success" : ""
+            }`}
+            role="status"
+          >
+            {message}
+          </p>
+        )}
       </form>
-
-      {/* Message */}
-
-      {message && <p className="login-aero-message">{message}</p>}
     </div>
   );
 };
