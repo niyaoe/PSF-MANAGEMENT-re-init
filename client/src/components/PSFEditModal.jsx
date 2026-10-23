@@ -2,7 +2,12 @@ import { useState, useEffect } from "react";
 import api from "../services/api";
 import "./psfEditModal.css";
 
-const PSFEditModal = ({ record, onClose, onSaveSuccess }) => {
+const PSFEditModal = ({
+  record,
+  onClose,
+  onSaveSuccess,
+  onOpenWhatsApp,
+}) => {
   const [formData, setFormData] = useState({
     ownerMobile: record?.ownerMobile || "",
     pincode: record?.pincode || "",
@@ -135,27 +140,41 @@ const PSFEditModal = ({ record, onClose, onSaveSuccess }) => {
   const handleSave = async () => {
     try {
       setSaving(true);
-
       setMessage("");
 
-      await api.put(`/psf/${record._id}`, formData);
+      const response = await api.put(`/psf/${record._id}`, formData);
 
-      setMessage("PSF record updated successfully");
-
+      // Refresh dashboard using the existing callback
       if (onSaveSuccess) {
-        onSaveSuccess();
+        await onSaveSuccess();
+      }
+
+      // Open the existing WhatsApp modal only for Open complaints
+      if (
+        String(formData.complaintStatus).trim().toLowerCase() === "open" &&
+        onOpenWhatsApp
+      ) {
+        const savedRecord = {
+          ...record,
+          ...formData,
+          ...(response.data.record || {}),
+        };
+
+        onClose();
+        onOpenWhatsApp(savedRecord);
+        return;
       }
 
       onClose();
     } catch (error) {
       setMessage(
-        error.response?.data?.message || "Failed to update PSF record",
+        error.response?.data?.message || "Failed to update PSF record"
       );
     } finally {
       setSaving(false);
     }
   };
-
+  
   if (!record) {
     return null;
   }

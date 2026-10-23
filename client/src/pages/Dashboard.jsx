@@ -6,6 +6,7 @@ import Pagination from "../components/Pagination";
 import PSFTable from "../components/PSFTable";
 import PSFEditModal from "../components/PSFEditModal";
 import "./Dashboard.css";
+import WhatsAppModal from "../components/WhatsAppModal";
 
 const SECTIONS = [
   { id: "open", label: "Open", description: "Active complaints", icon: "○" },
@@ -40,6 +41,9 @@ const Dashboard = () => {
   const [summary, setSummary] = useState(EMPTY_SUMMARY);
   const [records, setRecords] = useState([]);
   const [selectedRecord, setSelectedRecord] = useState(null);
+
+  const [whatsAppRecord, setWhatsAppRecord] = useState(null);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -319,8 +323,8 @@ const Dashboard = () => {
         <div
           id="psfd-concern-summary-content"
           className={`psfd-concern-summary-content ${concernSummaryExpanded
-              ? "psfd-concern-summary-expanded"
-              : "psfd-concern-summary-collapsed"
+            ? "psfd-concern-summary-expanded"
+            : "psfd-concern-summary-collapsed"
             }`}
           aria-hidden={!concernSummaryExpanded}
           inert={!concernSummaryExpanded}
@@ -405,7 +409,18 @@ const Dashboard = () => {
         record={selectedRecord}
         onClose={() => setSelectedRecord(null)}
         onSaveSuccess={fetchDashboard}
+        onOpenWhatsApp={(savedRecord) => {
+          setSelectedRecord(null);
+          setWhatsAppRecord(savedRecord);
+        }}
       />
+
+      {whatsAppRecord && (
+        <WhatsAppModal
+          initialRecord={whatsAppRecord}
+          onClose={() => setWhatsAppRecord(null)}
+        />
+      )}
     </div>
   );
 };

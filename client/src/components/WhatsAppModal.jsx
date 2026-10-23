@@ -28,9 +28,9 @@ const getValue = (value) => {
     return String(value);
 };
 
-const WhatsAppModal = ({ onClose }) => {
+const WhatsAppModal = ({ onClose, initialRecord = null }) => {
     const [roNumber, setRoNumber] = useState("");
-    const [record, setRecord] = useState(null);
+    const [record, setRecord] = useState(initialRecord);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [copyMessage, setCopyMessage] = useState("");
@@ -106,7 +106,9 @@ const WhatsAppModal = ({ onClose }) => {
             `Service Type: ${getValue(record.serviceType)}`,
             `Concern: ${getValue(record.voc)}`,
             `Location: ${getValue(record.location || record.branchId?.name)}`,
-            `Service Advisor: ${getValue(record.serviceAdvisor)}`,
+            `Service Advisor: ${getValue(
+                record.serviceAdvisorName || record.serviceAdvisor
+            )}`,
         ].join("\n");
     };
 
@@ -199,7 +201,10 @@ const WhatsAppModal = ({ onClose }) => {
                                     ],
                                     ["Service Type", getValue(record.serviceType)],
                                     ["Location", getValue(record.location || record.branchId?.name)],
-                                    ["Service Advisor", getValue(record.serviceAdvisor)],
+                                    [
+                                        "Service Advisor",
+                                        getValue(record.serviceAdvisorName || record.serviceAdvisor),
+                                    ],
                                 ].map(([label, value]) => (
                                     <div className="wa-aero-detail-row" key={label}>
                                         <strong>{label}:</strong>
