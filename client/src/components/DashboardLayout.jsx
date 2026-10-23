@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { NavLink, useNavigate, useLocation, Outlet } from "react-router-dom";
 import "./DashboardLayout.css";
+import WhatsAppModal from "../components/WhatsAppModal";
 
 const DashboardLayout = ({ children }) => {
   const navigate = useNavigate();
@@ -10,28 +11,36 @@ const DashboardLayout = ({ children }) => {
   const [sidebarPinned, setSidebarPinned] = useState(false);
   const [sidebarHovered, setSidebarHovered] = useState(false);
 
+  const [whatsAppModalOpen, setWhatsAppModalOpen] = useState(false);
+
   const storedUser = localStorage.getItem("user");
   const user = storedUser ? JSON.parse(storedUser) : null;
 
   const navigation = [
     { label: "Dashboard", path: "/dashboard", icon: "▦" },
+    {
+      label: "WhatsApp",
+      action: "whatsapp",
+      icon: "☏",
+    },
     ...(user?.role === "admin"
       ? [
-          { label: "User Management", path: "/users", icon: "♙" },
-          { label: "Branch Management", path: "/branches", icon: "⌂" },
-          { label: "Excel Import", path: "/import", icon: "⇧" },
-          {
-            label: "Type of Concern",
-            path: "/type-of-concerns",
-            icon: "☷",
-          },
-        ]
+        { label: "User Management", path: "/users", icon: "♙" },
+        { label: "Branch Management", path: "/branches", icon: "⌂" },
+        { label: "Excel Import", path: "/import", icon: "⇧" },
+        {
+          label: "Type of Concern",
+          path: "/type-of-concerns",
+          icon: "☷",
+        },
+      ]
       : []),
     {
       label: "User History",
       path: "/user-history",
       icon: "◷",
     },
+
   ];
 
   const sidebarExpanded = sidebarPinned || sidebarHovered;
@@ -46,9 +55,8 @@ const DashboardLayout = ({ children }) => {
 
   return (
     <div
-      className={`psfl-layout ${
-        sidebarExpanded ? "psfl-layout-expanded" : "psfl-layout-collapsed"
-      } ${mobileMenuOpen ? "psfl-mobile-menu-visible" : ""}`}
+      className={`psfl-layout ${sidebarExpanded ? "psfl-layout-expanded" : "psfl-layout-collapsed"
+        } ${mobileMenuOpen ? "psfl-mobile-menu-visible" : ""}`}
     >
       {mobileMenuOpen && (
         <button
@@ -60,9 +68,8 @@ const DashboardLayout = ({ children }) => {
       )}
 
       <aside
-        className={`psfl-sidebar ${
-          mobileMenuOpen ? "psfl-sidebar-open" : ""
-        } ${sidebarExpanded ? "psfl-sidebar-expanded" : "psfl-sidebar-collapsed"}`}
+        className={`psfl-sidebar ${mobileMenuOpen ? "psfl-sidebar-open" : ""
+          } ${sidebarExpanded ? "psfl-sidebar-expanded" : "psfl-sidebar-collapsed"}`}
         onMouseEnter={() => setSidebarHovered(true)}
         onMouseLeave={() => setSidebarHovered(false)}
       >
@@ -89,9 +96,8 @@ const DashboardLayout = ({ children }) => {
 
           <button
             type="button"
-            className={`psfl-pin-button ${
-              sidebarPinned ? "psfl-pin-active" : ""
-            }`}
+            className={`psfl-pin-button ${sidebarPinned ? "psfl-pin-active" : ""
+              }`}
             onClick={() => setSidebarPinned((pinned) => !pinned)}
             aria-label={sidebarPinned ? "Unpin sidebar" : "Pin sidebar open"}
             title={sidebarPinned ? "Unpin sidebar" : "Pin sidebar open"}
@@ -101,22 +107,40 @@ const DashboardLayout = ({ children }) => {
         </div>
 
         <nav className="psfl-navigation" aria-label="Main navigation">
-          {navigation.map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              onClick={closeMobileMenu}
-              title={item.label}
-              className={({ isActive }) =>
-                `psfl-nav-link ${isActive ? "psfl-nav-link-active" : ""}`
-              }
-            >
-              <span className="psfl-nav-icon" aria-hidden="true">
-                {item.icon}
-              </span>
-              <span className="psfl-nav-label">{item.label}</span>
-            </NavLink>
-          ))}
+          {navigation.map((item) =>
+            item.action === "whatsapp" ? (
+              <button
+                key={item.action}
+                type="button"
+                title={item.label}
+                className="psfl-nav-link"
+                onClick={() => {
+                  setWhatsAppModalOpen(true);
+                  closeMobileMenu();
+                }}
+              >
+                <span className="psfl-nav-icon" aria-hidden="true">
+                  {item.icon}
+                </span>
+                <span className="psfl-nav-label">{item.label}</span>
+              </button>
+            ) : (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                onClick={closeMobileMenu}
+                title={item.label}
+                className={({ isActive }) =>
+                  `psfl-nav-link ${isActive ? "psfl-nav-link-active" : ""}`
+                }
+              >
+                <span className="psfl-nav-icon" aria-hidden="true">
+                  {item.icon}
+                </span>
+                <span className="psfl-nav-label">{item.label}</span>
+              </NavLink>
+            ),
+          )}
         </nav>
 
         <div className="psfl-sidebar-bottom">
@@ -176,6 +200,11 @@ const DashboardLayout = ({ children }) => {
 
         <main className="psfl-page-content">{children ?? <Outlet />}</main>
       </div>
+      {whatsAppModalOpen && (
+        <WhatsAppModal
+          onClose={() => setWhatsAppModalOpen(false)}
+        />
+      )}
     </div>
   );
 };
