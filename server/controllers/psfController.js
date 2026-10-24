@@ -220,6 +220,7 @@ const getPSFDashboard = async (req, res) => {
       toDate,
       search,
       section,
+      concernId,
       page = 1,
       limit = 20,
     } = req.query;
@@ -229,6 +230,12 @@ const getPSFDashboard = async (req, res) => {
     if (section && !allowedSections.includes(section.toLowerCase())) {
       return res.status(400).json({
         message: "Invalid dashboard section",
+      });
+    }
+
+    if (concernId && !mongoose.isValidObjectId(concernId)) {
+      return res.status(400).json({
+        message: "Invalid concern ID",
       });
     }
 
@@ -491,7 +498,7 @@ const getPSFDashboard = async (req, res) => {
       ),
     ]);
 
-    // Filter records for the selected tab.
+    // Filter records for the selected tab
     const selectedSection = section
       ? section.toLowerCase()
       : null;
@@ -500,12 +507,21 @@ const getPSFDashboard = async (req, res) => {
       ? [sectionConditions[selectedSection]]
       : [];
 
+    // Base filter for the selected section
     const filter = buildFilter(selectedConditions);
 
-    const [totalRecords, records] = await Promise.all([
-      PSFRecord.countDocuments(filter),
+    // Apply the selected concern only to table records
+    const recordsFilter = concernId
+      ? buildFilter([
+        ...selectedConditions,
+        { typeOfConcern: new mongoose.Types.ObjectId(concernId) },
+      ])
+      : filter;
 
-      PSFRecord.find(filter)
+    const [totalRecords, records] = await Promise.all([
+      PSFRecord.countDocuments(recordsFilter),
+
+      PSFRecord.find(recordsFilter)
         .populate("branchId", "name code")
         .populate("typeOfConcern", "name section")
         .sort({ billDate: -1, _id: -1 })
@@ -514,9 +530,7 @@ const getPSFDashboard = async (req, res) => {
         .lean(),
     ]);
 
-    // Concern breakdown for the selected tab.
-    // Use a Mongoose find query so branch IDs and other filter values
-    // are cast correctly before querying MongoDB.
+    // Keep summary counts independent of the selected card
     const concernRecords = await PSFRecord.find(filter)
       .select("typeOfConcern")
       .lean();
