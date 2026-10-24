@@ -811,3 +811,33 @@
 
 
 
+/* clickable summery */
+
+.psfd-concern-card {
+  width: 100%;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+}
+
+.psfd-concern-card-selected {
+  outline: 2px solid #2878c8;
+  outline-offset: -2px;
+  background: #eaf3ff;
+}
+
+.psfd-clear-concern {
+  border: 1px solid #9bb8d8;
+  border-radius: 4px;
+  padding: 5px 10px;
+  background: #f2f7fd;
+  color: #174d80;
+  cursor: pointer;
+}
+
+.psfd-clear-concern:hover {
+  background: #dcecff;
+}
+
+

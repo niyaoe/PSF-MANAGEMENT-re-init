@@ -41,6 +41,7 @@ const Dashboard = () => {
   const [summary, setSummary] = useState(EMPTY_SUMMARY);
   const [records, setRecords] = useState([]);
   const [selectedRecord, setSelectedRecord] = useState(null);
+  const [selectedConcernId, setSelectedConcernId] = useState("");
 
   const [whatsAppRecord, setWhatsAppRecord] = useState(null);
 
@@ -107,6 +108,9 @@ const Dashboard = () => {
         limit,
         section: activeSection,
       };
+      if (selectedConcernId) {
+        params.concernId = selectedConcernId;
+      }
 
       if (search.trim()) params.search = search.trim();
       if (complaintStatus) params.complaintStatus = complaintStatus;
@@ -143,6 +147,7 @@ const Dashboard = () => {
     page,
     limit,
     activeSection,
+    selectedConcernId,
     search,
     complaintStatus,
     notConnected,
@@ -168,6 +173,14 @@ const Dashboard = () => {
     if (section === activeSection) return;
 
     setActiveSection(section);
+    setSelectedConcernId("");
+    setPage(1);
+  };
+
+  const handleConcernClick = (concernId) => {
+    setSelectedConcernId((previous) =>
+      previous === concernId ? "" : concernId
+    );
     setPage(1);
   };
 
@@ -333,18 +346,27 @@ const Dashboard = () => {
             {summary.concernCounts?.length > 0 ? (
               <div className="psfd-concern-grid">
                 {summary.concernCounts.map((concern) => (
-                  <article
-                    className="psfd-concern-card"
+                  <button
+                    type="button"
+                    className={`psfd-concern-card ${selectedConcernId === String(concern._id)
+                      ? "psfd-concern-card-selected"
+                      : ""
+                      }`}
                     key={concern._id || concern.name}
+                    onClick={() => handleConcernClick(String(concern._id))}
+                    aria-pressed={selectedConcernId === String(concern._id)}
+                    title={`Show ${concern.name} records`}
                   >
                     <span className="psfd-concern-indicator" />
+
                     <span className="psfd-concern-name">
                       {concern.name}
                     </span>
+
                     <strong>
                       {Number(concern.count || 0).toLocaleString("en-IN")}
                     </strong>
-                  </article>
+                  </button>
                 ))}
               </div>
             ) : (
@@ -368,6 +390,19 @@ const Dashboard = () => {
             {Number(pagination.totalRecords || 0).toLocaleString("en-IN")}{" "}
             results
           </span>
+
+          {selectedConcernId && (
+            <button
+              type="button"
+              className="psfd-clear-concern"
+              onClick={() => {
+                setSelectedConcernId("");
+                setPage(1);
+              }}
+            >
+              Clear concern filter ×
+            </button>
+          )}
         </div>
 
         {error && (
