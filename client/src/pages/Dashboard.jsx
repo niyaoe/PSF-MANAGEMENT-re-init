@@ -127,6 +127,8 @@ const Dashboard = () => {
       }));
 
       setRecords(response.data.records || []);
+      // console.log("data from dashboard :",response.data.records);
+      
 
       setPagination(
         response.data.pagination || {
