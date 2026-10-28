@@ -761,3 +761,71 @@
     transition: none;
   }
 }
+
+
+/* Not Connected summary tile */
+.psfd-not-connected-panel {
+  padding: 12px;
+}
+
+.psfd-not-connected-tile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 16px 20px;
+  border: 1px solid #e5b86b;
+  border-radius: 10px;
+  background: #fffaf0;
+  color: #704214;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.psfd-not-connected-tile:hover {
+  background: #fff3d9;
+  border-color: #d99a32;
+}
+
+.psfd-not-connected-tile-active {
+  background: #ffedc2;
+  border-color: #c47b08;
+  box-shadow: 0 0 0 2px rgb(196 123 8 / 12%);
+}
+
+.psfd-not-connected-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border-radius: 9px;
+  background: #ffedc2;
+  font-size: 25px;
+}
+
+.psfd-not-connected-copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.psfd-not-connected-copy strong {
+  font-size: 15px;
+}
+
+.psfd-not-connected-copy small {
+  color: #8a6b42;
+  font-size: 12px;
+}
+
+.psfd-not-connected-count {
+  font-size: 24px;
+  font-weight: 700;
+}

@@ -42,6 +42,8 @@ const Dashboard = () => {
   const [records, setRecords] = useState([]);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [selectedConcernId, setSelectedConcernId] = useState("");
+  const [showNotConnectedPending, setShowNotConnectedPending] =
+    useState(false);
 
   const [whatsAppRecord, setWhatsAppRecord] = useState(null);
 
@@ -112,6 +114,10 @@ const Dashboard = () => {
         params.concernId = selectedConcernId;
       }
 
+      if (showNotConnectedPending && activeSection === "pending") {
+        params.notConnected = "true";
+      }
+
       if (search.trim()) params.search = search.trim();
       if (complaintStatus) params.complaintStatus = complaintStatus;
       if (notConnected) params.notConnected = notConnected;
@@ -128,7 +134,7 @@ const Dashboard = () => {
 
       setRecords(response.data.records || []);
       // console.log("data from dashboard :",response.data.records);
-      
+
 
       setPagination(
         response.data.pagination || {
@@ -156,6 +162,7 @@ const Dashboard = () => {
     fromDate,
     toDate,
     branchId,
+    showNotConnectedPending,
   ]);
 
   useEffect(() => {
@@ -295,6 +302,7 @@ const Dashboard = () => {
           })}
         </div>
       </section>
+      
 
       {/* 4. SUMMARY FOR THE SELECTED SECTION */}
       <section className="psfd-content-panel">
@@ -345,6 +353,30 @@ const Dashboard = () => {
           inert={!concernSummaryExpanded}
         >
           <div className="psfd-concern-summary-inner">
+            {activeSection === "pending" && (
+              <button
+                type="button"
+                className={`psfd-not-connected-tile ${showNotConnectedPending ? "psfd-not-connected-tile-active" : ""
+                  }`}
+                onClick={() => {
+                  setShowNotConnectedPending((previous) => !previous);
+                  setSelectedConcernId("");
+                  setPage(1);
+                }}
+                aria-pressed={showNotConnectedPending}
+              >
+                <span className="psfd-not-connected-icon">◷</span>
+
+                <span className="psfd-not-connected-copy">
+                  <strong>Not Connected</strong>
+                  <small>First call date is empty</small>
+                </span>
+
+                <strong className="psfd-not-connected-count">
+                  {Number(summary.notConnectedPending || 0).toLocaleString("en-IN")}
+                </strong>
+              </button>
+            )}
             {summary.concernCounts?.length > 0 ? (
               <div className="psfd-concern-grid">
                 {summary.concernCounts.map((concern) => (

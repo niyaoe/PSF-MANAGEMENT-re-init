@@ -24,6 +24,7 @@ const PSFTable = ({ records, onSelectRecord, page, limit }) => {
             <th>Registration No.</th>
             <th>Chassis No.</th>
             <th>Pincode</th>
+            <th>TOC</th>
             <th>Owner Mobile</th>
             <th>Branch</th>
             <th>Model</th>
@@ -31,7 +32,7 @@ const PSFTable = ({ records, onSelectRecord, page, limit }) => {
             <th>SA Name</th>
             <th>Complaint Status</th>
             <th>Call Date</th>
-            <th>TOC</th>
+            
             <th>Rating</th>
             <th>CRM/CXM Remarks</th>
             <th>Actions</th>
@@ -56,6 +57,7 @@ const PSFTable = ({ records, onSelectRecord, page, limit }) => {
               <td>{record.registrationNumber || "-"}</td>
               <td>{record.chassisNumber || "-"}</td>
               <td>{record.pincode || "-"}</td>
+              <td>{record.typeOfConcern?.name || "-"}</td>
               <td>{record.ownerMobile || "-"}</td>
               <td>{record.branchId?.name || "-"}</td>
               <td>{record.model || "-"}</td>
@@ -79,7 +81,7 @@ const PSFTable = ({ records, onSelectRecord, page, limit }) => {
                   ? new Date(record.callDate).toLocaleDateString()
                   : "-"}
               </td>
-              <td>{record.typeOfConcern?.name || "-"}</td>
+              
               <td>{record.rating ?? "-"}</td>
               <td className="psft-remarks" title={record.crmCxmRemarks || ""}>
                 {record.crmCxmRemarks || "-"}
