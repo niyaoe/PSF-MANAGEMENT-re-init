@@ -482,21 +482,30 @@ const getPSFDashboard = async (req, res) => {
 
     // Tab counts use all common filters but are independent
     // of which tab is currently selected.
+
     const [
       openComplaints,
       pending,
       closedComplaints,
+      notConnectedPending,
     ] = await Promise.all([
       PSFRecord.countDocuments(
-        buildFilter([sectionConditions.open]),
+        buildFilter([sectionConditions.open])
       ),
       PSFRecord.countDocuments(
-        buildFilter([sectionConditions.pending]),
+        buildFilter([sectionConditions.pending])
       ),
       PSFRecord.countDocuments(
-        buildFilter([sectionConditions.closed]),
+        buildFilter([sectionConditions.closed])
+      ),
+      PSFRecord.countDocuments(
+        buildFilter([
+          sectionConditions.pending,
+          emptyFirstCallDate,
+        ])
       ),
     ]);
+
 
     // Filter records for the selected tab
     const selectedSection = section
@@ -591,6 +600,7 @@ const getPSFDashboard = async (req, res) => {
         openComplaints,
         pending,
         closedComplaints,
+        notConnectedPending,
         concernCounts,
       },
 
