@@ -11,6 +11,7 @@ import TypeOfConcern from "./pages/TypeOfConcern";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import DashboardLayout from "./components/DashboardLayout";
+import PSFOverallStatus from "./pages/PSFOverallStatus";
 
 const App = () => {
   return (
@@ -74,6 +75,11 @@ const App = () => {
                 <UserHistory />
               </ProtectedRoute>
             }
+          />
+
+          <Route
+            path="/psf-overall-status"
+            element={<PSFOverallStatus />}
           />
         </Route>
 

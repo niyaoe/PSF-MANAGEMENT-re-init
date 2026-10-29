@@ -40,6 +40,7 @@ const DashboardLayout = ({ children }) => {
       path: "/user-history",
       icon: "◷",
     },
+    { label: "Overall Status", path: "/psf-overall-status", icon: "▦" },
 
   ];
 
