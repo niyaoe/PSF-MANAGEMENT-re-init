@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const PSFRecord = require("../models/PSFRecord");
 const TypeOfConcern = require("../models/TypeOfConcern");
+const Branch = require("../models/Branch");
 
 const getPSFRecords = async (req, res) => {
   try {
@@ -1007,9 +1008,226 @@ const getUserHistory = async (req, res) => {
   }
 };
 
+
+const getPSFOverallStatus = async (req, res) => {
+  try {
+    const { branchId, fromDate, toDate } = req.query;
+    const isAdmin = req.user.role === "admin";
+
+    // 1. Same branch access rules as the dashboard
+    let allowedBranchIds = [];
+
+    if (isAdmin) {
+      if (branchId && branchId !== "all") {
+        const branch = await Branch.findById(branchId);
+
+        if (!branch) {
+          return res.status(404).json({
+            message: "Branch not found",
+          });
+        }
+
+        allowedBranchIds = [branch._id];
+      } else {
+        const branches = await Branch.find().select("_id");
+        allowedBranchIds = branches.map((b) => b._id);
+      }
+    } else {
+      allowedBranchIds = (req.user.branchIds || []).map((b) =>
+        String(b._id || b)
+      );
+
+      if (branchId && branchId !== "all") {
+        if (!allowedBranchIds.includes(String(branchId))) {
+          return res.status(403).json({
+            message: "Access denied for this branch",
+          });
+        }
+
+        allowedBranchIds = [branchId];
+      }
+    }
+
+    // 2. Same billDate range logic as the dashboard
+    const recordFilter = {
+      branchId: { $in: allowedBranchIds },
+    };
+
+    if (fromDate || toDate) {
+      recordFilter.billDate = {};
+
+      if (fromDate) {
+        const start = new Date(fromDate);
+        start.setHours(0, 0, 0, 0);
+        recordFilter.billDate.$gte = start;
+      }
+
+      if (toDate) {
+        const end = new Date(toDate);
+        end.setHours(23, 59, 59, 999);
+        recordFilter.billDate.$lte = end;
+      }
+    }
+
+    // 3. Fetch branches, concerns, and matching records
+    const [branches, concerns, records] = await Promise.all([
+      Branch.find({ _id: { $in: allowedBranchIds } }).sort({
+        name: 1,
+      }),
+
+      TypeOfConcern.find({
+        section: {
+          $in: [/^open$/i, /^closed$/i, /^pending$/i],
+        },
+      }),
+
+      PSFRecord.find(recordFilter).select(
+        "branchId typeOfConcern complaintStatus firstCallDate"
+      ),
+    ]);
+
+    // 4. Build concern IDs exactly by configured dashboard section
+    const concernIdsBySection = {
+      open: new Set(),
+      closed: new Set(),
+      pending: new Set(),
+    };
+
+    const concernMap = new Map();
+
+    concerns.forEach((concern) => {
+      const id = String(concern._id);
+      const section = String(concern.section || "").toLowerCase();
+
+      concernMap.set(id, concern);
+
+      if (concernIdsBySection[section]) {
+        concernIdsBySection[section].add(id);
+      }
+    });
+
+    // 5. Same empty first-call-date condition as the dashboard
+    const hasEmptyFirstCallDate = (record) =>
+      record.firstCallDate === undefined ||
+      record.firstCallDate === null ||
+      record.firstCallDate === "";
+
+    // 6. Exact dashboard section conditions
+    const matchesSection = (record, section) => {
+      const status = String(record.complaintStatus || "");
+      const concernId = String(record.typeOfConcern || "");
+
+      if (section === "open") {
+        return (
+          /^open$/i.test(status) &&
+          concernIdsBySection.open.has(concernId)
+        );
+      }
+
+      if (section === "closed") {
+        return (
+          /^closed$/i.test(status) ||
+          concernIdsBySection.closed.has(concernId)
+        );
+      }
+
+      if (section === "pending") {
+        return (
+          hasEmptyFirstCallDate(record) ||
+          concernIdsBySection.pending.has(concernId)
+        );
+      }
+
+      return false;
+    };
+
+    // 7. Count records using the same section rules
+    const sections = ["open", "closed", "pending"];
+
+    const counts = {};
+    const sectionTotals = {};
+    const branchTotals = {};
+    let grandTotal = 0;
+
+    sections.forEach((section) => {
+      counts[section] = {};
+      sectionTotals[section] = 0;
+    });
+
+    branches.forEach((branch) => {
+      branchTotals[String(branch._id)] = 0;
+    });
+
+    sections.forEach((section) => {
+      records.forEach((record) => {
+        if (!matchesSection(record, section)) return;
+
+        const bId = String(record.branchId);
+        const cId = String(record.typeOfConcern || "");
+
+        if (!counts[section][cId]) {
+          counts[section][cId] = {};
+        }
+
+        counts[section][cId][bId] =
+          (counts[section][cId][bId] || 0) + 1;
+
+        sectionTotals[section] += 1;
+        branchTotals[bId] = (branchTotals[bId] || 0) + 1;
+        grandTotal += 1;
+      });
+    });
+
+    // 8. Build rows from the actual counts.
+    // Include concerns counted in a section even if their configured
+    // concern section differs from that report section.
+    const rows = [];
+
+    sections.forEach((section) => {
+      Object.entries(counts[section]).forEach(([cId, branchCounts]) => {
+        const concern = concernMap.get(cId);
+
+        rows.push({
+          _id: `${section}-${cId}`,
+          concernId: cId,
+          concernName: concern
+            ? concern.name
+            : "Unknown concern",
+          section,
+          configuredSection: concern
+            ? concern.section
+            : null,
+          counts: branchCounts,
+          total: Object.values(branchCounts).reduce(
+            (sum, count) => sum + count,
+            0
+          ),
+        });
+      });
+    });
+
+    return res.status(200).json({
+      branches,
+      rows,
+      sectionTotals,
+      branchTotals,
+      grandTotal,
+    });
+  } catch (error) {
+    console.error("PSF overall status error:", error);
+
+    return res.status(500).json({
+      message: "Failed to fetch PSF overall status",
+      error: error.message,
+    });
+  }
+};
+
+
 module.exports = {
   getPSFRecords,
   updatePSFRecord,
   getPSFDashboard,
   getUserHistory,
+  getPSFOverallStatus
 };
