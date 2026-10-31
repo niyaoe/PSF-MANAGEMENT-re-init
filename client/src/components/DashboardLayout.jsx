@@ -41,6 +41,11 @@ const DashboardLayout = ({ children }) => {
       icon: "◷",
     },
     { label: "Overall Status", path: "/psf-overall-status", icon: "▦" },
+    {
+      label: "Concern Status",
+      path: "/psf-overall-concern-status",
+      icon: "☷",
+    },
 
   ];
 

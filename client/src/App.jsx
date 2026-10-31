@@ -12,6 +12,7 @@ import TypeOfConcern from "./pages/TypeOfConcern";
 import ProtectedRoute from "./components/ProtectedRoute";
 import DashboardLayout from "./components/DashboardLayout";
 import PSFOverallStatus from "./pages/PSFOverallStatus";
+import PSFOverallConcernStatus from "./pages/PSFOverallConcernStatus";
 
 const App = () => {
   return (
@@ -81,7 +82,13 @@ const App = () => {
             path="/psf-overall-status"
             element={<PSFOverallStatus />}
           />
+
+           <Route
+          path="/psf-overall-concern-status"
+          element={<PSFOverallConcernStatus />}
+        />
         </Route>
+       
 
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>

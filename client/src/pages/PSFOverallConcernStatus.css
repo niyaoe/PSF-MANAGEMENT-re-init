@@ -1,0 +1,590 @@
+
+/* =========================================
+   PSF OVERALL CONCERN STATUS
+   WINDOWS 7 AERO STYLE
+========================================= */
+
+.psf-concern-page {
+    --aero-text: #19364b;
+
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    padding: 7px;
+    overflow: hidden;
+    color: var(--aero-text);
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+    font-size: 12px;
+    background: linear-gradient(
+        135deg,
+        #f8fcff 0%,
+        #e8f3fc 48%,
+        #d5e7f7 100%
+    );
+    box-sizing: border-box;
+}
+
+.psf-concern-page *,
+.psf-concern-page *::before,
+.psf-concern-page *::after {
+    box-sizing: border-box;
+}
+
+/* =========================================
+   TOOLBAR
+========================================= */
+
+.psf-concern-toolbar {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    min-height: 45px;
+    padding: 5px 8px;
+    border: 1px solid #6f9fbe;
+    border-radius: 5px;
+    background: linear-gradient(
+        180deg,
+        #ffffff 0%,
+        #e3f3ff 38%,
+        #aed5f2 48%,
+        #d3e9fa 100%
+    );
+    box-shadow:
+        inset 0 1px 0 #ffffff,
+        inset 0 -1px 0 rgba(76, 130, 174, 0.24),
+        0 1px 3px rgba(35, 79, 113, 0.2);
+}
+
+.psf-concern-toolbar-left,
+.psf-concern-toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.psf-concern-app-icon {
+    display: grid;
+    place-items: center;
+    width: 33px;
+    height: 33px;
+    flex: 0 0 33px;
+    border: 1px solid #4e86b1;
+    border-radius: 5px;
+    color: #ffffff;
+    font-size: 21px;
+    background: linear-gradient(
+        145deg,
+        #8bd1ff,
+        #2581c2 55%,
+        #14558e
+    );
+    box-shadow: inset 0 1px 2px #ffffff;
+}
+
+.psf-concern-toolbar-title {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.psf-concern-toolbar-title strong {
+    color: #143e60;
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.psf-concern-toolbar-title span {
+    color: #48677e;
+    font-size: 11px;
+}
+
+.psf-concern-total {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
+    border: 1px solid #8aafcc;
+    border-radius: 4px;
+    background: linear-gradient(#ffffff, #e7f3fd);
+    box-shadow: inset 0 1px 0 #ffffff;
+    white-space: nowrap;
+}
+
+.psf-concern-total span {
+    color: #43647d;
+}
+
+.psf-concern-total strong {
+    color: #145a91;
+    font-size: 15px;
+    font-variant-numeric: tabular-nums;
+}
+
+/* =========================================
+   BUTTONS
+========================================= */
+
+.psf-concern-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    min-height: 28px;
+    padding: 4px 9px;
+    border: 1px solid #8baac1;
+    border-radius: 4px;
+    color: #234761;
+    font-family: inherit;
+    font-size: 11px;
+    white-space: nowrap;
+    cursor: pointer;
+    background: linear-gradient(
+        180deg,
+        #ffffff 0%,
+        #f4f9fd 45%,
+        #dcebf7 100%
+    );
+    box-shadow:
+        inset 0 1px 0 #ffffff,
+        0 1px 1px rgba(30, 75, 110, 0.1);
+    transition: background 150ms ease, border-color 150ms ease;
+}
+
+.psf-concern-button:hover:not(:disabled) {
+    border-color: #4c9bd0;
+    background: linear-gradient(
+        #ffffff,
+        #d6edff 50%,
+        #b4ddfa
+    );
+}
+
+.psf-concern-button:active:not(:disabled),
+.psf-concern-button.active {
+    border-color: #4d91bd;
+    background: linear-gradient(#b9ddf5, #e8f6ff);
+    box-shadow: inset 0 1px 3px rgba(34, 93, 139, 0.2);
+}
+
+.psf-concern-button:disabled {
+    opacity: 0.55;
+    cursor: default;
+}
+
+.psf-concern-button.primary {
+    border-color: #4385b5;
+    color: #ffffff;
+    font-weight: 600;
+    text-shadow: 0 1px 1px #22587d;
+    background: linear-gradient(
+        #91d0f8,
+        #4a9dd8 48%,
+        #2877b3 52%,
+        #3b8fc7
+    );
+}
+
+.psf-concern-button.primary:hover:not(:disabled) {
+    background: linear-gradient(
+        #b3e2ff,
+        #65b6eb 48%,
+        #3688c6 52%,
+        #56a8dd
+    );
+}
+
+.psf-concern-filter-count {
+    display: inline-grid;
+    place-items: center;
+    min-width: 17px;
+    height: 17px;
+    padding: 0 4px;
+    border-radius: 10px;
+    color: #ffffff;
+    background: #287cb8;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.psf-concern-chevron {
+    margin-left: 2px;
+    font-size: 9px;
+}
+
+/* =========================================
+   FILTERS
+========================================= */
+
+.psf-concern-filter-wrap {
+    display: grid;
+    grid-template-rows: 0fr;
+    flex: 0 0 auto;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    border: 0 solid transparent;
+    border-radius: 5px;
+    transition:
+        grid-template-rows 200ms ease,
+        opacity 160ms ease,
+        visibility 200ms;
+}
+
+.psf-concern-filter-wrap.expanded {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    visibility: visible;
+    border: 1px solid #98b9d1;
+    background: linear-gradient(#fafdff, #e0effb);
+    box-shadow:
+        inset 0 1px 0 #ffffff,
+        0 1px 2px rgba(35, 79, 113, 0.12);
+}
+
+.psf-concern-filter-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 10px;
+    min-height: 0;
+    overflow: hidden;
+    padding: 0 10px;
+}
+
+.psf-concern-filter-wrap.expanded .psf-concern-filter-inner {
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.psf-concern-filter-field {
+    display: flex;
+    flex: 1 1 155px;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 130px;
+}
+
+.psf-concern-filter-field label {
+    color: #355b77;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.psf-concern-filter-field input,
+.psf-concern-filter-field select {
+    width: 100%;
+    height: 29px;
+    padding: 4px 7px;
+    border: 1px solid #9bb6cb;
+    border-radius: 3px;
+    outline: none;
+    color: #23445c;
+    font-family: inherit;
+    font-size: 12px;
+    background: linear-gradient(#ffffff, #f3f8fc);
+    box-shadow: inset 0 1px 2px rgba(30, 70, 100, 0.08);
+}
+
+.psf-concern-filter-field input:focus,
+.psf-concern-filter-field select:focus {
+    border-color: #3d9ad5;
+    box-shadow: 0 0 3px rgba(45, 151, 215, 0.5);
+}
+
+.psf-concern-filter-actions {
+    display: flex;
+    gap: 6px;
+}
+
+/* =========================================
+   ERROR AND LOADING
+========================================= */
+
+.psf-concern-error {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 7px 10px;
+    border: 1px solid #d6a29a;
+    border-radius: 4px;
+    color: #852d24;
+    background: linear-gradient(#fff7f5, #fbe4df);
+}
+
+.psf-concern-loading {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 0;
+    color: #426782;
+}
+
+.psf-concern-spinner {
+    width: 19px;
+    height: 19px;
+    border: 2px solid #c0dced;
+    border-top-color: #287fb8;
+    border-radius: 50%;
+    animation: psf-concern-spin 750ms linear infinite;
+}
+
+@keyframes psf-concern-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* =========================================
+   TABLE PANEL
+========================================= */
+
+.psf-concern-table-panel {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    border: 1px solid #8aaec8;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow:
+        inset 0 1px 0 #ffffff,
+        0 1px 3px rgba(40, 82, 112, 0.15);
+}
+
+.psf-concern-table-scroll {
+    position: relative;
+    flex: 1 1 0;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #8aafca #e4eff7;
+}
+
+/* =========================================
+   TABLE
+========================================= */
+
+.psf-concern-table {
+    width: 100%;
+    min-width: max-content;
+    border-collapse: separate;
+    border-spacing: 0;
+    color: #25465d;
+    font-size: 10px;
+    line-height: 1.15;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Sticky header */
+
+.psf-concern-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    height: 25px;
+    padding: 3px 6px;
+    border-right: 1px solid #a5c2d8;
+    border-bottom: 1px solid #7fa8c6;
+    color: #194d73;
+    text-align: center;
+    white-space: nowrap;
+    background: linear-gradient(
+        180deg,
+        #ffffff 0%,
+        #eaf5fd 48%,
+        #cfe5f6 100%
+    );
+    box-shadow: inset 0 1px 0 #ffffff;
+}
+
+.psf-concern-table thead th:first-child {
+    left: 0;
+    z-index: 12;
+    min-width: 175px;
+    text-align: left;
+}
+
+.psf-concern-table thead th:last-child {
+    min-width: 58px;
+}
+
+/* Table cells */
+
+.psf-concern-table tbody td {
+    height: 21px;
+    padding: 2px 6px;
+    border-right: 1px solid #e0eaf1;
+    border-bottom: 1px solid #dce7ef;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.psf-concern-table tbody tr:nth-child(even):not(.psf-concern-grand-total) {
+    background: rgba(227, 241, 251, 0.45);
+}
+
+.psf-concern-table tbody tr:hover:not(.psf-concern-grand-total) {
+    background: #e3f3ff;
+}
+
+/* Sticky concern column */
+
+.psf-concern-heading,
+.psf-concern-name {
+    position: sticky;
+    left: 0;
+}
+
+.psf-concern-heading {
+    z-index: 12;
+}
+
+.psf-concern-name {
+    z-index: 2;
+    min-width: 175px;
+    max-width: 300px;
+    overflow: hidden;
+    text-align: left !important;
+    text-overflow: ellipsis;
+    background: #f8fbfe;
+}
+
+.psf-concern-row-total {
+    min-width: 58px;
+    color: #194e77;
+    font-weight: 700;
+    background: rgba(212, 233, 248, 0.75);
+}
+
+.psf-concern-empty {
+    height: 65px !important;
+    color: #688399;
+    text-align: center !important;
+}
+
+/* =========================================
+   GRAND TOTAL — STICKY FOOTER
+========================================= */
+
+.psf-concern-table tbody tr.psf-concern-grand-total td {
+    position: sticky;
+    bottom: 0;
+    z-index: 8;
+    height: 25px;
+    padding: 3px 6px;
+    border-top: 1px solid #7ca5c4;
+    border-bottom: 0;
+    color: #174b71;
+    font-size: 10px;
+    font-weight: 700;
+    background: linear-gradient(#e8f5ff, #bddcf1);
+    box-shadow: inset 0 1px 0 #ffffff;
+}
+
+.psf-concern-table tbody tr.psf-concern-grand-total td:first-child {
+    left: 0;
+    z-index: 11;
+    text-align: left;
+}
+
+/* =========================================
+   STATUS BAR
+========================================= */
+
+.psf-concern-statusbar {
+    display: flex;
+    flex: 0 0 25px;
+    align-items: center;
+    gap: 15px;
+    min-width: 0;
+    padding: 3px 9px;
+    border-top: 1px solid #a3bfd3;
+    color: #4b6a80;
+    font-size: 10px;
+    background: linear-gradient(#f8fcff, #e0edf7);
+}
+
+.psf-concern-status-total {
+    margin-left: auto;
+    color: #21577d;
+    font-weight: 700;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 760px) {
+    .psf-concern-page {
+        gap: 5px;
+        padding: 4px;
+    }
+
+    .psf-concern-toolbar {
+        flex-wrap: wrap;
+    }
+
+    .psf-concern-toolbar-right {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 5px;
+    }
+
+    .psf-concern-total {
+        padding: 4px 6px;
+    }
+
+    .psf-concern-toolbar-title span {
+        display: none;
+    }
+
+    .psf-concern-filter-inner {
+        gap: 8px;
+    }
+
+    .psf-concern-filter-field {
+        flex-basis: 130px;
+    }
+
+    .psf-concern-filter-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .psf-concern-table thead th:first-child,
+    .psf-concern-name {
+        min-width: 150px;
+    }
+}
+
+/* =========================================
+   ACCESSIBILITY
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+    .psf-concern-filter-wrap,
+    .psf-concern-button {
+        transition: none;
+    }
+
+    .psf-concern-spinner {
+        animation: none;
+    }
+}
