@@ -457,17 +457,30 @@ const getPSFDashboard = async (req, res) => {
         ],
       },
 
-      open: {
+      pending: {
         $and: [
-          { complaintStatus: /^open$/i },
-          { typeOfConcern: { $in: openConcernIds } },
+          { complaintStatus: { $not: /^closed$/i } },
+          {
+            $or: [
+              emptyFirstCallDate,
+              { typeOfConcern: { $in: pendingConcernIds } },
+            ],
+          },
         ],
       },
 
-      pending: {
-        $or: [
-          emptyFirstCallDate,
-          { typeOfConcern: { $in: pendingConcernIds } },
+      open: {
+        $and: [
+          { complaintStatus: { $not: /^closed$/i } },
+          {
+            $or: [
+              { complaintStatus: /^open$/i },
+              { complaintStatus: "" },
+              { complaintStatus: null },
+              { complaintStatus: { $exists: false } },
+            ],
+          },
+          { typeOfConcern: { $in: openConcernIds } },
         ],
       },
     };
@@ -1114,27 +1127,36 @@ const getPSFOverallStatus = async (req, res) => {
 
     // 6. Exact dashboard section conditions
     const matchesSection = (record, section) => {
-      const status = String(record.complaintStatus || "");
+      const status = String(record.complaintStatus || "").trim();
       const concernId = String(record.typeOfConcern || "");
 
-      if (section === "open") {
-        return (
-          /^open$/i.test(status) &&
-          concernIdsBySection.open.has(concernId)
-        );
-      }
+      const isClosed = /^closed$/i.test(status);
 
       if (section === "closed") {
         return (
-          /^closed$/i.test(status) ||
+          isClosed ||
           concernIdsBySection.closed.has(concernId)
         );
       }
 
       if (section === "pending") {
         return (
-          hasEmptyFirstCallDate(record) ||
-          concernIdsBySection.pending.has(concernId)
+          !isClosed &&
+          (
+            hasEmptyFirstCallDate(record) ||
+            concernIdsBySection.pending.has(concernId)
+          )
+        );
+      }
+
+      if (section === "open") {
+        return (
+          !isClosed &&
+          (
+            /^open$/i.test(status) ||
+            status === ""
+          ) &&
+          concernIdsBySection.open.has(concernId)
         );
       }
 
@@ -1147,7 +1169,7 @@ const getPSFOverallStatus = async (req, res) => {
     const counts = {};
     const sectionTotals = {};
     const branchTotals = {};
-    let grandTotal = 0;
+    let grandTotal = records.length;
 
     sections.forEach((section) => {
       counts[section] = {};
@@ -1158,6 +1180,7 @@ const getPSFOverallStatus = async (req, res) => {
       branchTotals[String(branch._id)] = 0;
     });
 
+    // Calculate section-wise counts
     sections.forEach((section) => {
       records.forEach((record) => {
         if (!matchesSection(record, section)) return;
@@ -1173,9 +1196,13 @@ const getPSFOverallStatus = async (req, res) => {
           (counts[section][cId][bId] || 0) + 1;
 
         sectionTotals[section] += 1;
-        branchTotals[bId] = (branchTotals[bId] || 0) + 1;
-        grandTotal += 1;
       });
+    });
+
+    // Calculate unique branch totals independently
+    records.forEach((record) => {
+      const bId = String(record.branchId);
+      branchTotals[bId] = (branchTotals[bId] || 0) + 1;
     });
 
     // 8. Build rows from the actual counts.
@@ -1223,11 +1250,168 @@ const getPSFOverallStatus = async (req, res) => {
   }
 };
 
+const getPSFOverallConcernStatus = async (req, res) => {
+  try {
+    const { branchId, fromDate, toDate } = req.query;
+    const isAdmin = req.user.role === "admin";
+
+    // 1. Branch access rules
+    let allowedBranchIds = [];
+
+    if (isAdmin) {
+      if (branchId && branchId !== "all") {
+        const branch = await Branch.findById(branchId);
+
+        if (!branch) {
+          return res.status(404).json({
+            message: "Branch not found",
+          });
+        }
+
+        allowedBranchIds = [branch._id];
+      } else {
+        const branches = await Branch.find().select("_id");
+        allowedBranchIds = branches.map((b) => b._id);
+      }
+    } else {
+      allowedBranchIds = (req.user.branchIds || []).map((b) =>
+        String(b._id || b)
+      );
+
+      if (branchId && branchId !== "all") {
+        if (!allowedBranchIds.includes(String(branchId))) {
+          return res.status(403).json({
+            message: "Access denied for this branch",
+          });
+        }
+
+        allowedBranchIds = [branchId];
+      }
+    }
+
+    // 2. Bill date filtering
+    const recordFilter = {
+      branchId: { $in: allowedBranchIds },
+    };
+
+    if (fromDate || toDate) {
+      recordFilter.billDate = {};
+
+      if (fromDate) {
+        const start = new Date(fromDate);
+        start.setHours(0, 0, 0, 0);
+        recordFilter.billDate.$gte = start;
+      }
+
+      if (toDate) {
+        const end = new Date(toDate);
+        end.setHours(23, 59, 59, 999);
+        recordFilter.billDate.$lte = end;
+      }
+    }
+
+    // 3. Fetch branches, all concerns and matching records
+    const [branches, concerns, records] = await Promise.all([
+      Branch.find({
+        _id: { $in: allowedBranchIds },
+      }).sort({ name: 1 }),
+
+      TypeOfConcern.find().sort({ name: 1 }),
+
+      PSFRecord.find(recordFilter).select(
+        "branchId typeOfConcern"
+      ),
+    ]);
+
+    // 4. Initialize totals
+    const branchTotals = {};
+
+    branches.forEach((branch) => {
+      branchTotals[String(branch._id)] = 0;
+    });
+
+    const concernCounts = {};
+
+    concerns.forEach((concern) => {
+      concernCounts[String(concern._id)] = {};
+    });
+
+    // 5. Count records by concern and branch
+    // 5. Count all records by branch and configured concern
+    records.forEach((record) => {
+      const bId = String(record.branchId);
+      const cId = String(record.typeOfConcern || "");
+
+      // Count every record in its branch
+      branchTotals[bId] = (branchTotals[bId] || 0) + 1;
+
+      // Only count configured concerns in concern rows
+      if (!concernCounts[cId]) return;
+
+      concernCounts[cId][bId] =
+        (concernCounts[cId][bId] || 0) + 1;
+    });
+
+    // 6. Build concern rows
+    const rows = concerns.map((concern) => {
+      const cId = String(concern._id);
+      const counts = concernCounts[cId] || {};
+
+      // Include zero counts for every accessible branch
+      branches.forEach((branch) => {
+        const bId = String(branch._id);
+
+        if (counts[bId] === undefined) {
+          counts[bId] = 0;
+        }
+      });
+
+      const total = Object.values(counts).reduce(
+        (sum, count) => sum + count,
+        0
+      );
+
+      return {
+        _id: cId,
+        concernId: cId,
+        concernName: concern.name,
+        counts,
+        total,
+      };
+    });
+
+    // 7. Grand total
+    const grandTotal = rows.reduce(
+      (sum, row) => sum + row.total,
+      0
+    );
+
+    return res.status(200).json({
+      branches,
+      rows,
+      branchTotals,
+      grandTotal,
+    });
+
+  } catch (error) {
+    console.error(
+      "PSF overall concern status error:",
+      error
+    );
+
+    return res.status(500).json({
+      message: "Failed to fetch PSF overall concern status",
+      error: error.message,
+    });
+  }
+};
+
 
 module.exports = {
   getPSFRecords,
   updatePSFRecord,
   getPSFDashboard,
   getUserHistory,
-  getPSFOverallStatus
+  getPSFOverallStatus,
+  getPSFOverallConcernStatus
 };

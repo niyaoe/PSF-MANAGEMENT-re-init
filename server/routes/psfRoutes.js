@@ -5,7 +5,8 @@ const {
     updatePSFRecord,
     getPSFDashboard,
     getUserHistory,
-    getPSFOverallStatus
+    getPSFOverallStatus,
+    getPSFOverallConcernStatus
 } = require("../controllers/psfController");
 
 
@@ -46,6 +47,12 @@ router.get(
   "/overall-status",
   protect,
   getPSFOverallStatus
+);
+
+router.get(
+  "/overall-concern-status",
+  protect,
+  getPSFOverallConcernStatus
 );
 
 module.exports = router;
