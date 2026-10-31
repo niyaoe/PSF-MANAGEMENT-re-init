@@ -41,9 +41,49 @@ const PSFOverallConcernStatus = () => {
             setBranches(response.data.branches || []);
             setRows(fetchedRows);
 
-            // Select all concerns initially
+
+            // Select only the specified concerns by default
+            const defaultSelectedConcernNames = [
+                "PDI related",
+                "Passed To CRM",
+                "Vehicle at Service Center",
+                "Wrong Number",
+                "Infra - Sales",
+                "Previous Service Related",
+                "Vehicle Damage",
+                "Proper Updation",
+                "Using Other Person",
+                "Behaviour of Staffs",
+                "Work Not Completed",
+                "Software Updation",
+                "RSA Related",
+                "Parts / Accessory Related",
+                "Vehicle Damaged during RoadTest/ P&D",
+                "Poor Workshop Infrastructure/ambience",
+                "Service Quality",
+                "Items Missing in the workshop",
+                "Unauthorised use of Vehicle",
+                "Department Vehicle",
+                "Product Related",
+                "Infra - Service",
+                "Washing Issue",
+                "Vehicle Not Driven",
+                "Delay in Delivery",
+                "Delay in Attending",
+                "Delay in Appointment",
+                "Compliant Not Solved",
+                "Bill Amount Issue",
+                "Parts Issue",
+            ];
+
             setSelectedConcernIds(
-                fetchedRows.map(row => String(row._id))
+                fetchedRows
+                    .filter(row =>
+                        defaultSelectedConcernNames.includes(
+                            row.concernName?.trim()
+                        )
+                    )
+                    .map(row => String(row._id))
             );
 
         } catch (err) {
@@ -74,9 +114,11 @@ const PSFOverallConcernStatus = () => {
     ].filter(Boolean).length;
 
     // Selected concern rows
-    const selectedRows = rows.filter(row =>
-        selectedConcernIds.includes(String(row._id))
-    );
+    const selectedRows = rows
+        .filter(row =>
+            selectedConcernIds.includes(String(row._id))
+        )
+        .sort((a, b) => Number(b.total || 0) - Number(a.total || 0));
 
     // Selected concern count
     const selectedConcernCount = selectedRows.length;
@@ -391,9 +433,9 @@ const PSFOverallConcernStatus = () => {
 
                                         {branches.map(branch => (
                                             <td key={branch._id}>
-                                                {Number(
-                                                    row.counts?.[branch._id] ?? 0
-                                                ).toLocaleString("en-IN")}
+                                                {Number(row.counts?.[branch._id] ?? 0) === 0
+                                                    ? "-"
+                                                    : Number(row.counts?.[branch._id]).toLocaleString("en-IN")}
                                             </td>
                                         ))}
 
