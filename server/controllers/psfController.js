@@ -219,6 +219,7 @@ const getPSFDashboard = async (req, res) => {
       notConnected,
       fromDate,
       toDate,
+      dateField = "billDate",
       search,
       section,
       concernId,
@@ -370,8 +371,17 @@ const getPSFDashboard = async (req, res) => {
     }
 
     // Bill date range filter
+
+    // Date range filter - Bill Date or Call Date
+
+    if (!["billDate", "callDate"].includes(dateField)) {
+      return res.status(400).json({
+        message: "Invalid date field",
+      });
+    }
+
     if (fromDate || toDate) {
-      const billDateFilter = {};
+      const dateRangeFilter = {};
 
       const parseDateOnly = (value) => {
         if (!value) return null;
@@ -383,7 +393,7 @@ const getPSFDashboard = async (req, res) => {
         const date = new Date(
           Number(match[1]),
           Number(match[2]) - 1,
-          Number(match[3]),
+          Number(match[3])
         );
 
         if (
@@ -402,11 +412,11 @@ const getPSFDashboard = async (req, res) => {
 
         if (!startDate || isNaN(startDate.getTime())) {
           return res.status(400).json({
-            message: "Invalid fromDate. Use YYYY-MM-DD.",
+            message: "Invalid fromDate",
           });
         }
 
-        billDateFilter.$gte = startDate;
+        dateRangeFilter.$gte = startDate;
       }
 
       if (toDate) {
@@ -414,26 +424,29 @@ const getPSFDashboard = async (req, res) => {
 
         if (!endDate || isNaN(endDate.getTime())) {
           return res.status(400).json({
-            message: "Invalid toDate. Use YYYY-MM-DD.",
+            message: "Invalid toDate",
           });
         }
 
         endDate.setHours(23, 59, 59, 999);
-        billDateFilter.$lte = endDate;
+        dateRangeFilter.$lte = endDate;
       }
 
       if (
-        billDateFilter.$gte &&
-        billDateFilter.$lte &&
-        billDateFilter.$gte > billDateFilter.$lte
+        dateRangeFilter.$gte &&
+        dateRangeFilter.$lte &&
+        dateRangeFilter.$gte > dateRangeFilter.$lte
       ) {
         return res.status(400).json({
-          message: "fromDate cannot be after toDate",
+          message: "From date cannot be after To date",
         });
       }
 
-      commonConditions.push({ billDate: billDateFilter });
+      commonConditions.push({
+        [dateField]: dateRangeFilter,
+      });
     }
+
 
     // Find concern IDs by their configured sections.
     // The section names are matched case-insensitively.
@@ -547,7 +560,7 @@ const getPSFDashboard = async (req, res) => {
       PSFRecord.find(recordsFilter)
         .populate("branchId", "name code")
         .populate("typeOfConcern", "name section")
-        .sort({ billDate: -1, _id: -1 })
+        .sort({ billDate: 1, _id: 1 })
         .skip(skip)
         .limit(recordsPerPage)
         .lean(),
