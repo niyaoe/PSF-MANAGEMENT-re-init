@@ -55,6 +55,7 @@ const Dashboard = () => {
   const [notConnected, setNotConnected] = useState("");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
+  const [dateField, setDateField] = useState("billDate");
   const [page, setPage] = useState(1);
   const [limit] = useState(20);
 
@@ -109,6 +110,7 @@ const Dashboard = () => {
         page,
         limit,
         section: activeSection,
+        dateField,
       };
       if (selectedConcernId) {
         params.concernId = selectedConcernId;
@@ -162,6 +164,7 @@ const Dashboard = () => {
     fromDate,
     toDate,
     branchId,
+    dateField,
     showNotConnectedPending,
   ]);
 
@@ -247,6 +250,11 @@ const Dashboard = () => {
             setFromDate={setFromDate}
             toDate={toDate}
             setToDate={setToDate}
+            dateField={dateField}
+            setDateField={(value) => {
+              setDateField(value);
+              setPage(1);
+            }}
             onSearch={handleSearch}
             branches={branches}
             branchId={branchId}
@@ -302,7 +310,7 @@ const Dashboard = () => {
           })}
         </div>
       </section>
-      
+
 
       {/* 4. SUMMARY FOR THE SELECTED SECTION */}
       <section className="psfd-content-panel">

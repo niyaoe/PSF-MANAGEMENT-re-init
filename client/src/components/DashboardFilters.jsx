@@ -1,3 +1,4 @@
+
 import BranchFilter from "./BranchFilter";
 import "./DashboardFilters.css";
 
@@ -12,6 +13,8 @@ const DashboardFilters = ({
   setFromDate,
   toDate,
   setToDate,
+  dateField,
+  setDateField,
   onSearch,
   branches,
   branchId,
@@ -24,20 +27,20 @@ const DashboardFilters = ({
     setFromDate("");
     setToDate("");
     setBranchId("");
+    setDateField("billDate");
   };
+
+  const dateLabel = dateField === "billDate" ? "Bill Date" : "Call Date";
 
   return (
     <div className="aero-filter-panel">
       <div className="aero-filter-group">
         <label>Search</label>
-
         <input
           type="text"
           placeholder="RO, registration, chassis, Name..."
           value={search}
-          onChange={(event) => {
-            setSearch(event.target.value);
-          }}
+          onChange={(event) => setSearch(event.target.value)}
         />
       </div>
 
@@ -49,61 +52,43 @@ const DashboardFilters = ({
         />
       )}
 
-      {/* <div className="aero-filter-group">
-        <label>Complaint Status</label>
+      <div className="aero-filter-group aero-date-switch-group">
+        <label>Filter Date By</label>
 
-        <select
-          value={complaintStatus}
-          onChange={(event) => {
-            setComplaintStatus(event.target.value);
-          }}
-        >
-          <option value="">All</option>
+        <div className="aero-date-switch">
+          <button
+            type="button"
+            className={dateField === "billDate" ? "active" : ""}
+            onClick={() => setDateField("billDate")}
+          >
+            Bill
+          </button>
 
-          <option value="Open">Open</option>
-
-          <option value="Closed">Closed</option>
-        </select>
+          <button
+            type="button"
+            className={dateField === "callDate" ? "active" : ""}
+            onClick={() => setDateField("callDate")}
+          >
+            Call
+          </button>
+        </div>
       </div>
 
       <div className="aero-filter-group">
-        <label>Connection Status</label>
-
-        <select
-          value={notConnected}
-          onChange={(event) => {
-            setNotConnected(event.target.value);
-          }}
-        >
-          <option value="">All</option>
-
-          <option value="true">Not Connected</option>
-
-          <option value="false">Connected</option>
-        </select>
-      </div> */}
-
-      <div className="aero-filter-group">
-        <label>Bill Date From</label>
-
+        <label>{dateLabel} From</label>
         <input
           type="date"
           value={fromDate}
-          onChange={(event) => {
-            setFromDate(event.target.value);
-          }}
+          onChange={(event) => setFromDate(event.target.value)}
         />
       </div>
 
       <div className="aero-filter-group">
-        <label>Bill Date To</label>
-
+        <label>{dateLabel} To</label>
         <input
           type="date"
           value={toDate}
-          onChange={(event) => {
-            setToDate(event.target.value);
-          }}
+          onChange={(event) => setToDate(event.target.value)}
         />
       </div>
 
