@@ -6,8 +6,10 @@ import "./PSFOverallConcernStatus.css";
 const PSFOverallConcernStatus = () => {
     const [branches, setBranches] = useState([]);
     const [rows, setRows] = useState([]);
-    const [branchTotals, setBranchTotals] = useState({});
-    const [grandTotal, setGrandTotal] = useState(0);
+    // const [branchTotals, setBranchTotals] = useState({});
+    // const [grandTotal, setGrandTotal] = useState(0);
+    const [selectedConcernIds, setSelectedConcernIds] = useState([]);
+    const [concernDropdownOpen, setConcernDropdownOpen] = useState(false);
 
     const [branchId, setBranchId] = useState("");
     const [fromDate, setFromDate] = useState("");
@@ -34,10 +36,15 @@ const PSFOverallConcernStatus = () => {
                 { params }
             );
 
+            const fetchedRows = response.data.rows || [];
+
             setBranches(response.data.branches || []);
-            setRows(response.data.rows || []);
-            setBranchTotals(response.data.branchTotals || {});
-            setGrandTotal(response.data.grandTotal || 0);
+            setRows(fetchedRows);
+
+            // Select all concerns initially
+            setSelectedConcernIds(
+                fetchedRows.map(row => String(row._id))
+            );
 
         } catch (err) {
             setError(
@@ -66,6 +73,45 @@ const PSFOverallConcernStatus = () => {
         toDate,
     ].filter(Boolean).length;
 
+    // Selected concern rows
+    const selectedRows = rows.filter(row =>
+        selectedConcernIds.includes(String(row._id))
+    );
+
+    // Selected concern count
+    const selectedConcernCount = selectedRows.length;
+
+    // Selected grand total
+    const selectedGrandTotal = selectedRows.reduce(
+        (sum, row) => sum + Number(row.total || 0),
+        0
+    );
+
+    // Branch-wise totals based only on selected concerns
+    const selectedBranchTotals = {};
+
+    branches.forEach(branch => {
+        selectedBranchTotals[branch._id] = selectedRows.reduce(
+            (sum, row) =>
+                sum + Number(row.counts?.[branch._id] || 0),
+            0
+        );
+    });
+
+    // Toggle individual concern
+    const toggleConcern = (concernId) => {
+        setSelectedConcernIds(prev =>
+            prev.includes(String(concernId))
+                ? prev.filter(id => id !== String(concernId))
+                : [...prev, String(concernId)]
+        );
+    };
+
+    // Clear all selected concerns
+    const clearSelectedConcerns = () => {
+        setSelectedConcernIds([]);
+    };
+
     return (
         <main className="psf-concern-page">
 
@@ -86,8 +132,85 @@ const PSFOverallConcernStatus = () => {
                     <div className="psf-concern-total">
                         <span>Grand Total</span>
                         <strong>
-                            {grandTotal.toLocaleString("en-IN")}
+                            {selectedGrandTotal.toLocaleString("en-IN")}
                         </strong>
+                    </div>
+
+                    <div className="psf-concern-dropdown">
+
+                        <button
+                            type="button"
+                            className={`psf-concern-button ${concernDropdownOpen ? "active" : ""
+                                }`}
+                            onClick={() =>
+                                setConcernDropdownOpen(prev => !prev)
+                            }
+                        >
+                            ☷ Concerns
+
+                            <span className="psf-concern-filter-count">
+                                {selectedConcernCount}/{rows.length}
+                            </span>
+
+                            <span className="psf-concern-chevron">
+                                {concernDropdownOpen ? "▲" : "▼"}
+                            </span>
+                        </button>
+
+                        {concernDropdownOpen && (
+                            <div className="psf-concern-dropdown-menu">
+
+                                <div className="psf-concern-dropdown-header">
+                                    <strong>Select Concerns</strong>
+
+                                    <button
+                                        type="button"
+                                        onClick={clearSelectedConcerns}
+                                    >
+                                        Clear
+                                    </button>
+                                </div>
+
+                                <div className="psf-concern-dropdown-list">
+
+                                    {rows.map(row => (
+                                        <label
+                                            key={row._id}
+                                            className="psf-concern-checkbox"
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedConcernIds.includes(
+                                                    String(row._id)
+                                                )}
+                                                onChange={() =>
+                                                    toggleConcern(row._id)
+                                                }
+                                            />
+
+                                            <span>{row.concernName}</span>
+
+                                            <small>
+                                                {Number(row.total || 0).toLocaleString("en-IN")}
+                                            </small>
+                                        </label>
+                                    ))}
+
+                                    {rows.length === 0 && (
+                                        <div className="psf-concern-dropdown-empty">
+                                            No concerns available
+                                        </div>
+                                    )}
+
+                                </div>
+
+                                <div className="psf-concern-dropdown-footer">
+                                    {selectedConcernCount} of {rows.length} selected
+                                </div>
+
+                            </div>
+                        )}
+
                     </div>
 
                     <button
@@ -259,7 +382,7 @@ const PSFOverallConcernStatus = () => {
 
                             <tbody>
 
-                                {rows.map(row => (
+                                {selectedRows.map(row => (
                                     <tr key={row._id}>
 
                                         <td className="psf-concern-name">
@@ -281,7 +404,7 @@ const PSFOverallConcernStatus = () => {
                                     </tr>
                                 ))}
 
-                                {rows.length === 0 && (
+                                {selectedRows.length === 0 && (
                                     <tr>
                                         <td
                                             colSpan={branches.length + 2}
@@ -300,13 +423,13 @@ const PSFOverallConcernStatus = () => {
                                     {branches.map(branch => (
                                         <td key={branch._id}>
                                             {Number(
-                                                branchTotals?.[branch._id] ?? 0
+                                                selectedBranchTotals[branch._id] ?? 0
                                             ).toLocaleString("en-IN")}
                                         </td>
                                     ))}
 
                                     <td>
-                                        {grandTotal.toLocaleString("en-IN")}
+                                        {selectedGrandTotal.toLocaleString("en-IN")}
                                     </td>
 
                                 </tr>
@@ -319,10 +442,10 @@ const PSFOverallConcernStatus = () => {
                 {/* Status bar */}
                 <footer className="psf-concern-statusbar">
                     <span>{branches.length} branches</span>
-                    <span>{rows.length} concerns</span>
+                    <span>{selectedConcernCount} / {rows.length} concerns selected</span>
 
                     <span className="psf-concern-status-total">
-                        Total: {grandTotal.toLocaleString("en-IN")}
+                        Total: {selectedGrandTotal.toLocaleString("en-IN")}
                     </span>
                 </footer>
 

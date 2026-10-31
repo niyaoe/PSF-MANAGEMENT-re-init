@@ -588,3 +588,134 @@
         animation: none;
     }
 }
+
+
+/* dropdown checkboxes */
+
+/* =========================================
+   CONCERN CHECKBOX DROPDOWN
+========================================= */
+
+.psf-concern-dropdown {
+    position: relative;
+    flex: 0 0 auto;
+}
+
+.psf-concern-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 5px);
+    right: 0;
+    z-index: 100;
+
+    width: 290px;
+    max-height: 380px;
+
+    display: flex;
+    flex-direction: column;
+
+    border: 1px solid #82a9c6;
+    border-radius: 5px;
+
+    background: linear-gradient(#ffffff, #edf6fd);
+
+    box-shadow:
+        0 4px 12px rgba(30, 70, 100, 0.25),
+        inset 0 1px 0 #ffffff;
+}
+
+.psf-concern-dropdown-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 8px 10px;
+
+    border-bottom: 1px solid #b6cede;
+
+    color: #194d73;
+    background: linear-gradient(#ffffff, #dceefa);
+}
+
+.psf-concern-dropdown-header button {
+    padding: 3px 8px;
+
+    border: 1px solid #c58c8c;
+    border-radius: 3px;
+
+    color: #a33333;
+    font-family: inherit;
+    font-size: 11px;
+
+    background: linear-gradient(#ffffff, #f9e5e5);
+    cursor: pointer;
+}
+
+.psf-concern-dropdown-header button:hover {
+    background: #f5d5d5;
+}
+
+.psf-concern-dropdown-list {
+    overflow-y: auto;
+    padding: 5px;
+    min-height: 0;
+}
+
+.psf-concern-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 7px 6px;
+
+    border-bottom: 1px solid #e1ebf2;
+
+    color: #294c65;
+    cursor: pointer;
+}
+
+.psf-concern-checkbox:hover {
+    background: #e0f1fd;
+}
+
+.psf-concern-checkbox input {
+    width: 14px;
+    height: 14px;
+    margin: 0;
+    accent-color: #287fb8;
+    cursor: pointer;
+}
+
+.psf-concern-checkbox span {
+    flex: 1;
+    min-width: 0;
+}
+
+.psf-concern-checkbox small {
+    color: #39749c;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.psf-concern-dropdown-footer {
+    padding: 7px 10px;
+
+    border-top: 1px solid #b6cede;
+
+    color: #315c78;
+    font-weight: 600;
+
+    background: #e5f1fa;
+}
+
+.psf-concern-dropdown-empty {
+    padding: 15px;
+    color: #688399;
+    text-align: center;
+}
+
+@media (max-width: 760px) {
+    .psf-concern-dropdown-menu {
+        right: 0;
+        width: min(290px, 85vw);
+    }
+}
