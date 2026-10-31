@@ -59,6 +59,17 @@ const PSFEditModal = ({
 
   const [typeOfConcerns, setTypeOfConcerns] = useState([]);
 
+  const concernSectionOrder = ["Closed", "Open", "Pending"];
+
+  const groupedConcerns = concernSectionOrder.map((section) => ({
+    section,
+    concerns: typeOfConcerns.filter(
+      (concern) =>
+        String(concern.section || "").toLowerCase() ===
+        section.toLowerCase()
+    ),
+  }));
+
   useEffect(() => {
     const fetchTypeOfConcerns = async () => {
       try {
@@ -174,7 +185,7 @@ const PSFEditModal = ({
       setSaving(false);
     }
   };
-  
+
   if (!record) {
     return null;
   }
@@ -571,6 +582,7 @@ const PSFEditModal = ({
 
                 <select
                   name="typeOfConcern"
+                  className="psf-concern-select"
                   value={
                     typeof formData.typeOfConcern === "object"
                       ? formData.typeOfConcern?._id || ""
@@ -580,10 +592,22 @@ const PSFEditModal = ({
                 >
                   <option value="">Select Type of Concern</option>
 
-                  {typeOfConcerns.map((concern) => (
-                    <option key={concern._id} value={concern._id}>
-                      {concern.name}
-                    </option>
+                  {groupedConcerns.map(({ section, concerns }) => (
+                    <optgroup
+                      key={section}
+                      label={section}
+                      className={`concern-group-${section.toLowerCase()}`}
+                    >
+                      {concerns.map((concern) => (
+                        <option
+                          key={concern._id}
+                          value={concern._id}
+                          className={`concern-option-${section.toLowerCase()}`}
+                        >
+                          {concern.name}
+                        </option>
+                      ))}
+                    </optgroup>
                   ))}
                 </select>
               </div>

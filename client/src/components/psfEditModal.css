@@ -625,3 +625,50 @@
     transition: none;
   }
 }
+
+
+
+/* bgcolor and section order for type of concern dropdown */
+
+/* =========================================
+   TYPE OF CONCERN — SECTION COLORS
+========================================= */
+
+/* Closed — Green */
+.psf-concern-select optgroup[label="Closed"] {
+  background: #d9f2df;
+  color: #176b32;
+  font-weight: 700;
+}
+
+.psf-concern-select optgroup[label="Closed"] option {
+  background: #edfaef;
+  color: #176b32;
+  font-weight: 400;
+}
+
+/* Open — Blue */
+.psf-concern-select optgroup[label="Open"] {
+  background: #dceeff;
+  color: #155b9b;
+  font-weight: 700;
+}
+
+.psf-concern-select optgroup[label="Open"] option {
+  background: #eff7ff;
+  color: #155b9b;
+  font-weight: 400;
+}
+
+/* Pending — Orange */
+.psf-concern-select optgroup[label="Pending"] {
+  background: #ffebd1;
+  color: #a65308;
+  font-weight: 700;
+}
+
+.psf-concern-select optgroup[label="Pending"] option {
+  background: #fff5e8;
+  color: #a65308;
+  font-weight: 400;
+}
