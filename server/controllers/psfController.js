@@ -1323,8 +1323,32 @@ const getPSFOverallConcernStatus = async (req, res) => {
       }
     }
 
+    const { serviceTypes } = req.query;
+
+    if (typeof serviceTypes !== "undefined") {
+      let selectedServiceTypes;
+
+      try {
+        selectedServiceTypes = JSON.parse(serviceTypes);
+      } catch {
+        return res.status(400).json({
+          message: "Invalid service types format",
+        });
+      }
+
+      if (!Array.isArray(selectedServiceTypes)) {
+        return res.status(400).json({
+          message: "Service types must be an array",
+        });
+      }
+
+      recordFilter.serviceType = {
+        $in: selectedServiceTypes,
+      };
+    }
+
     // 3. Fetch branches, all concerns and matching records
-    const [branches, concerns, records] = await Promise.all([
+    const [branches, concerns, records, availableServiceTypes] = await Promise.all([
       Branch.find({
         _id: { $in: allowedBranchIds },
       }).sort({ name: 1 }),
@@ -1332,8 +1356,14 @@ const getPSFOverallConcernStatus = async (req, res) => {
       TypeOfConcern.find().sort({ name: 1 }),
 
       PSFRecord.find(recordFilter).select(
-        "branchId typeOfConcern"
+        "branchId typeOfConcern serviceType"
       ),
+      PSFRecord.distinct("serviceType", {
+        branchId: { $in: allowedBranchIds },
+        serviceType: { $nin: ["", null] },
+      }),
+
+
     ]);
 
     // 4. Initialize totals
@@ -1404,6 +1434,7 @@ const getPSFOverallConcernStatus = async (req, res) => {
       rows,
       branchTotals,
       grandTotal,
+      serviceTypes: availableServiceTypes,
     });
 
   } catch (error) {
