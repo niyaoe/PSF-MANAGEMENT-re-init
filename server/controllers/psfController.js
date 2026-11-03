@@ -1265,7 +1265,12 @@ const getPSFOverallStatus = async (req, res) => {
 
 const getPSFOverallConcernStatus = async (req, res) => {
   try {
-    const { branchId, fromDate, toDate } = req.query;
+    const {
+      branchId,
+      fromDate,
+      toDate,
+      dateField = "billDate",
+    } = req.query;
     const isAdmin = req.user.role === "admin";
 
     // 1. Branch access rules
@@ -1301,25 +1306,31 @@ const getPSFOverallConcernStatus = async (req, res) => {
         allowedBranchIds = [branchId];
       }
     }
+    if (!["billDate", "callDate"].includes(dateField)) {
+      return res.status(400).json({
+        message: "Invalid date field",
+      });
+    }
 
     // 2. Bill date filtering
     const recordFilter = {
       branchId: { $in: allowedBranchIds },
     };
 
+    // Date filtering
     if (fromDate || toDate) {
-      recordFilter.billDate = {};
+      recordFilter[dateField] = {};
 
       if (fromDate) {
         const start = new Date(fromDate);
         start.setHours(0, 0, 0, 0);
-        recordFilter.billDate.$gte = start;
+        recordFilter[dateField].$gte = start;
       }
 
       if (toDate) {
         const end = new Date(toDate);
         end.setHours(23, 59, 59, 999);
-        recordFilter.billDate.$lte = end;
+        recordFilter[dateField].$lte = end;
       }
     }
 
