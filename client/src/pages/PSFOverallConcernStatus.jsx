@@ -36,6 +36,7 @@ const PSFOverallConcernStatus = () => {
     const [branchId, setBranchId] = useState("");
     const [fromDate, setFromDate] = useState("");
     const [toDate, setToDate] = useState("");
+    const [dateField, setDateField] = useState("billDate");
 
     const [filtersOpen, setFiltersOpen] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -59,6 +60,7 @@ const PSFOverallConcernStatus = () => {
             if (branchId) params.branchId = branchId;
             if (fromDate) params.fromDate = fromDate;
             if (toDate) params.toDate = toDate;
+            params.dateField = dateField;
 
             const response = await api.get(
                 "/psf/overall-concern-status",
@@ -128,7 +130,7 @@ const PSFOverallConcernStatus = () => {
         } finally {
             setLoading(false);
         }
-    }, [branchId, fromDate, toDate, selectedServiceTypes]);
+    }, [branchId, fromDate, toDate, selectedServiceTypes, dateField]);
 
     useEffect(() => {
         fetchOverallConcernStatus();
@@ -422,8 +424,32 @@ const PSFOverallConcernStatus = () => {
                     </div>
 
                     <div className="psf-concern-filter-field">
+                        <label>Date Filter</label>
+
+                        <div className="aero-date-switch">
+                            <button
+                                type="button"
+                                className={dateField === "billDate" ? "active" : ""}
+                                onClick={() => setDateField("billDate")}
+                                disabled={!filtersOpen}
+                            >
+                                Bill Date
+                            </button>
+
+                            <button
+                                type="button"
+                                className={dateField === "callDate" ? "active" : ""}
+                                onClick={() => setDateField("callDate")}
+                                disabled={!filtersOpen}
+                            >
+                                Call Date
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="psf-concern-filter-field">
                         <label htmlFor="concern-from-date">
-                            Bill date from
+                            {dateField === "billDate" ? "Bill Date From" : "Call Date From"}
                         </label>
 
                         <input
@@ -438,7 +464,7 @@ const PSFOverallConcernStatus = () => {
 
                     <div className="psf-concern-filter-field">
                         <label htmlFor="concern-to-date">
-                            Bill date to
+                            {dateField === "billDate" ? "Bill Date To" : "Call Date To"}
                         </label>
 
                         <input
