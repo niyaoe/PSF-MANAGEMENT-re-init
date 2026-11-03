@@ -330,6 +330,7 @@ const PSFEditModal = ({
                   onChange={handleChange}
                   maxLength="6"
                   inputMode="numeric"
+                  required
                 />
               </div>
 

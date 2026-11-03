@@ -3,6 +3,28 @@ import { useCallback, useEffect, useState } from "react";
 import api from "../services/api";
 import "./PSFOverallConcernStatus.css";
 
+const SERVICE_TYPES = [
+    "1ST FREE SERVICE",
+    "2ND FREE SERVICE",
+    "3RD FREE SERVICE",
+    "4TH FREE SERVICE",
+    "ACCIDENTAL",
+    "BODY BUILDING",
+    "CAMPAIGN",
+    "Charging",
+    "DOOR STEP SERVICE",
+    "En-route Repair",
+    "FC WORK",
+    "PAID SERVICE",
+    "PANEL REPAIR",
+    "PDI SERVICE",
+    "PRESALE",
+    "Quick RO",
+    "RUNNING REPAIR",
+    "Service Accessories",
+    "SERVICE ACTION",
+];
+
 const PSFOverallConcernStatus = () => {
     const [branches, setBranches] = useState([]);
     const [rows, setRows] = useState([]);
@@ -19,13 +41,20 @@ const PSFOverallConcernStatus = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
+
+    const [serviceTypes] = useState(SERVICE_TYPES);
+    const [selectedServiceTypes, setSelectedServiceTypes] = useState(SERVICE_TYPES);
+    const [serviceTypeDropdownOpen, setServiceTypeDropdownOpen] = useState(false);
+
     // Fetch overall concern status
     const fetchOverallConcernStatus = useCallback(async () => {
         try {
             setLoading(true);
             setError("");
 
-            const params = {};
+            const params = {
+                serviceTypes: JSON.stringify(selectedServiceTypes),
+            };
 
             if (branchId) params.branchId = branchId;
             if (fromDate) params.fromDate = fromDate;
@@ -35,11 +64,16 @@ const PSFOverallConcernStatus = () => {
                 "/psf/overall-concern-status",
                 { params }
             );
+            if (selectedServiceTypes.length > 0) {
+                params.serviceTypes = JSON.stringify(selectedServiceTypes);
+            }
 
             const fetchedRows = response.data.rows || [];
 
             setBranches(response.data.branches || []);
             setRows(fetchedRows);
+
+
 
 
             // Select only the specified concerns by default
@@ -94,7 +128,7 @@ const PSFOverallConcernStatus = () => {
         } finally {
             setLoading(false);
         }
-    }, [branchId, fromDate, toDate]);
+    }, [branchId, fromDate, toDate, selectedServiceTypes]);
 
     useEffect(() => {
         fetchOverallConcernStatus();
@@ -154,6 +188,18 @@ const PSFOverallConcernStatus = () => {
         setSelectedConcernIds([]);
     };
 
+    const toggleServiceType = (serviceType) => {
+        setSelectedServiceTypes(prev =>
+            prev.includes(serviceType)
+                ? prev.filter(item => item !== serviceType)
+                : [...prev, serviceType]
+        );
+    };
+
+    const clearServiceTypes = () => {
+        setSelectedServiceTypes([]);
+    };
+
     return (
         <main className="psf-concern-page">
 
@@ -170,6 +216,62 @@ const PSFOverallConcernStatus = () => {
                 </div>
 
                 <div className="psf-concern-toolbar-right">
+                    <div className="psf-concern-dropdown">
+                        <button
+                            type="button"
+                            className={`psf-concern-button ${serviceTypeDropdownOpen ? "active" : ""
+                                }`}
+                            onClick={() =>
+                                setServiceTypeDropdownOpen(prev => !prev)
+                            }
+                        >
+                            Service Type
+
+                            <span className="psf-concern-filter-count">
+                                {selectedServiceTypes.length}/{serviceTypes.length}
+                            </span>
+
+                            <span className="psf-concern-chevron">
+                                {serviceTypeDropdownOpen ? "▲" : "▼"}
+                            </span>
+                        </button>
+
+                        {serviceTypeDropdownOpen && (
+                            <div className="psf-concern-dropdown-menu">
+                                <div className="psf-concern-dropdown-header">
+                                    <strong>Select Service Types</strong>
+
+                                    <button
+                                        type="button"
+                                        onClick={clearServiceTypes}
+                                    >
+                                        Clear
+                                    </button>
+                                </div>
+
+                                <div className="psf-concern-dropdown-list">
+                                    {serviceTypes.map(serviceType => (
+                                        <label
+                                            key={serviceType}
+                                            className="psf-concern-checkbox"
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedServiceTypes.includes(serviceType)}
+                                                onChange={() => toggleServiceType(serviceType)}
+                                            />
+
+                                            <span>{serviceType}</span>
+                                        </label>
+                                    ))}
+                                </div>
+
+                                <div className="psf-concern-dropdown-footer">
+                                    {selectedServiceTypes.length} of {serviceTypes.length} selected
+                                </div>
+                            </div>
+                        )}
+                    </div>
 
                     <div className="psf-concern-total">
                         <span>Grand Total</span>
