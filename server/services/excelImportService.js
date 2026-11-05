@@ -87,7 +87,7 @@ const mapExcelRow = (row) => {
 
     advisorExplanation: String(
       row[
-        "Did the Service Advisor explained properly about the work , time and the amount for service?"
+      "Did the Service Advisor explained properly about the work , time and the amount for service?"
       ] || "",
     ).trim(),
 
@@ -251,13 +251,11 @@ const importPSFExcel = async (filePath) => {
 
     MALLAPURAM_MADB: "malappuram",
 
-    mallapuram_madb : "malappuram",
+    mallapuram_madb: "malappuram",
 
-    NEW_NILAMBUR_SZ : "nilambur",
+    NEW_NILAMBUR_SZ: "nilambur",
 
-    new_nilambur_sz : "nilambur",
-
-    
+    new_nilambur_sz: "nilambur",
   };
 
   const rowsWithBranchId = mappedRows.map((row, index) => {
@@ -280,34 +278,53 @@ const importPSFExcel = async (filePath) => {
     };
   });
 
+  // const operations = rowsWithBranchId.map((row) => {
+  //   const { branchName, ...record } = row;
+
+  //   if (isNewFormat) {
+  //     return {
+  //       updateOne: {
+  //         filter: {
+  //           branchId: record.branchId,
+  //           roNumber: record.roNumber,
+  //         },
+  //         update: {
+  //           $set: {
+  //             billDate: record.billDate,
+  //             branchId: record.branchId,
+  //             roNumber: record.roNumber,
+  //             registrationNumber: record.registrationNumber,
+  //             chassisNumber: record.chassisNumber,
+  //             serviceAdvisorName: record.serviceAdvisorName,
+  //             customerName: record.customerName,
+  //             revisit: record.revisit,
+  //             model: record.model,
+  //             serviceType: record.serviceType,
+  //           },
+  //         },
+  //         upsert: true,
+  //       },
+  //     };
+  //   }
+
+  //   return {
+  //     updateOne: {
+  //       filter: {
+  //         branchId: record.branchId,
+  //         roNumber: record.roNumber,
+  //       },
+  //       update: {
+  //         $setOnInsert: {
+  //           ...record,
+  //         },
+  //       },
+  //       upsert: true,
+  //     },
+  //   };
+  // });
+
   const operations = rowsWithBranchId.map((row) => {
     const { branchName, ...record } = row;
-
-    if (isNewFormat) {
-      return {
-        updateOne: {
-          filter: {
-            branchId: record.branchId,
-            roNumber: record.roNumber,
-          },
-          update: {
-            $set: {
-              billDate: record.billDate,
-              branchId: record.branchId,
-              roNumber: record.roNumber,
-              registrationNumber: record.registrationNumber,
-              chassisNumber: record.chassisNumber,
-              serviceAdvisorName: record.serviceAdvisorName,
-              customerName: record.customerName,
-              revisit: record.revisit,
-              model: record.model,
-              serviceType: record.serviceType,
-            },
-          },
-          upsert: true,
-        },
-      };
-    }
 
     return {
       updateOne: {
