@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import "./UserManagement.css";
@@ -20,16 +19,21 @@ const UserManagement = () => {
 
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedUserBranches, setSelectedUserBranches] = useState([]);
-  const [savingBranches, setSavingBranches] = useState(false);
+
+  const [editName, setEditName] = useState("");
+  const [editEmail, setEditEmail] = useState("");
+  const [editRole, setEditRole] = useState("employee");
+  const [editPassword, setEditPassword] = useState("");
+  const [editIsActive, setEditIsActive] = useState(true);
+
+  const [savingUser, setSavingUser] = useState(false);
 
   const fetchBranches = async () => {
     try {
       const response = await api.get("/branches");
       setBranches(response.data.branches || []);
     } catch (error) {
-      setMessage(
-        error.response?.data?.message || "Failed to load branches"
-      );
+      setMessage(error.response?.data?.message || "Failed to load branches");
     }
   };
 
@@ -39,9 +43,7 @@ const UserManagement = () => {
       const response = await api.get("/users");
       setUsers(response.data.users || []);
     } catch (error) {
-      setMessage(
-        error.response?.data?.message || "Failed to load users"
-      );
+      setMessage(error.response?.data?.message || "Failed to load users");
     } finally {
       setUsersLoading(false);
     }
@@ -54,7 +56,7 @@ const UserManagement = () => {
 
   const handleBranchChange = (event) => {
     const branchIds = Array.from(event.target.selectedOptions).map(
-      (option) => option.value
+      (option) => option.value,
     );
     setSelectedBranches(branchIds);
   };
@@ -80,48 +82,64 @@ const UserManagement = () => {
       setRole("employee");
       setSelectedBranches([]);
     } catch (error) {
-      setMessage(
-        error.response?.data?.message || "Failed to create user"
-      );
+      setMessage(error.response?.data?.message || "Failed to create user");
     } finally {
       setLoading(false);
     }
   };
 
-  const openBranchEditor = (user) => {
+  const openUserEditor = (user) => {
     setSelectedUser(user);
-    setSelectedUserBranches(
-      (user.branchIds || []).map((branch) => branch._id)
-    );
+
+    setEditName(user.name || "");
+    setEditEmail(user.email || "");
+    setEditRole(user.role || "employee");
+    setEditPassword("");
+    setEditIsActive(user.isActive);
+
+    setSelectedUserBranches((user.branchIds || []).map((branch) => branch._id));
   };
 
-  const closeBranchEditor = () => {
+  const closeUserEditor = () => {
     setSelectedUser(null);
     setSelectedUserBranches([]);
+    setEditName("");
+    setEditEmail("");
+    setEditRole("employee");
+    setEditPassword("");
+    setEditIsActive(true);
   };
 
-  const handleSaveBranches = async () => {
+  const handleUpdateUser = async () => {
     if (!selectedUser) return;
 
     try {
       setMessage("");
-      setSavingBranches(true);
+      setSavingUser(true);
 
-      const response = await api.put(
-        `/users/${selectedUser._id}/branches`,
-        { branchIds: selectedUserBranches }
-      );
+      const updateData = {
+        name: editName.trim(),
+        email: editEmail.trim(),
+        role: editRole,
+        branchIds: selectedUserBranches,
+        isActive: editIsActive,
+      };
 
-      setMessage(response.data.message);
-      closeBranchEditor();
+      // Only send password if the admin entered a new one
+      if (editPassword.trim()) {
+        updateData.password = editPassword;
+      }
+
+      const response = await api.put(`/users/${selectedUser._id}`, updateData);
+
+      setMessage(response.data.message || "User updated successfully");
+
+      closeUserEditor();
       await fetchUsers();
     } catch (error) {
-      setMessage(
-        error.response?.data?.message ||
-          "Failed to update user branches"
-      );
+      setMessage(error.response?.data?.message || "Failed to update user");
     } finally {
-      setSavingBranches(false);
+      setSavingUser(false);
     }
   };
 
@@ -179,10 +197,7 @@ const UserManagement = () => {
           </div>
         </div>
 
-        <form
-          className="user-aero-create-form"
-          onSubmit={handleSubmit}
-        >
+        <form className="user-aero-create-form" onSubmit={handleSubmit}>
           <div className="user-aero-form-group">
             <label htmlFor="user-name">Full name</label>
             <input
@@ -388,10 +403,10 @@ const UserManagement = () => {
                       <button
                         className="user-aero-edit-button"
                         type="button"
-                        onClick={() => openBranchEditor(user)}
+                        onClick={() => openUserEditor(user)}
                       >
                         <span aria-hidden="true">✎</span>
-                        Edit branches
+                        Edit user
                       </button>
                     </td>
                   </tr>
@@ -413,12 +428,13 @@ const UserManagement = () => {
       </section>
 
       {/* Edit branches modal */}
+      {/* Edit User Modal */}
       {selectedUser && (
         <div
           className="user-aero-modal-overlay"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) {
-              closeBranchEditor();
+              closeUserEditor();
             }
           }}
         >
@@ -431,14 +447,13 @@ const UserManagement = () => {
             <header className="user-aero-modal-titlebar">
               <div className="user-aero-modal-titlebar-icon">♙</div>
 
-              <div className="user-aero-modal-window-title">
-                Edit User Branches
-              </div>
+              <div className="user-aero-modal-window-title">Edit User</div>
 
               <button
                 className="user-aero-modal-close"
                 type="button"
-                onClick={closeBranchEditor}
+                onClick={closeUserEditor}
+                disabled={savingUser}
                 title="Close"
                 aria-label="Close dialog"
               >
@@ -448,22 +463,70 @@ const UserManagement = () => {
 
             <div className="user-aero-modal-content">
               <div className="user-aero-modal-intro">
-                <span className="user-aero-modal-avatar" aria-hidden="true">
+                <span className="user-aero-modal-avatar">
                   {(selectedUser.name || "?").charAt(0).toUpperCase()}
                 </span>
+
                 <div>
-                  <h2 id="user-aero-modal-heading">Branch assignments</h2>
+                  <h2 id="user-aero-modal-heading">User details</h2>
                   <p>
-                    Update branches assigned to{" "}
+                    Update account information for{" "}
                     <strong>{selectedUser.name}</strong>.
                   </p>
                 </div>
               </div>
 
               <div className="user-aero-form-group">
-                <label htmlFor="edit-user-branches">
-                  Select branches
-                </label>
+                <label htmlFor="edit-user-name">Full name</label>
+                <input
+                  id="edit-user-name"
+                  type="text"
+                  value={editName}
+                  onChange={(event) => setEditName(event.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="user-aero-form-group">
+                <label htmlFor="edit-user-email">Email address</label>
+                <input
+                  id="edit-user-email"
+                  type="email"
+                  value={editEmail}
+                  onChange={(event) => setEditEmail(event.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="user-aero-form-group">
+                <label htmlFor="edit-user-password">New password</label>
+                <input
+                  id="edit-user-password"
+                  type="password"
+                  placeholder="Leave blank to keep current password"
+                  value={editPassword}
+                  onChange={(event) => setEditPassword(event.target.value)}
+                  autoComplete="new-password"
+                />
+                <p className="user-aero-help">
+                  Enter a password only if you want to change it.
+                </p>
+              </div>
+
+              <div className="user-aero-form-group">
+                <label htmlFor="edit-user-role">User role</label>
+                <select
+                  id="edit-user-role"
+                  value={editRole}
+                  onChange={(event) => setEditRole(event.target.value)}
+                >
+                  <option value="employee">Employee</option>
+                  <option value="manager">Manager</option>
+                </select>
+              </div>
+
+              <div className="user-aero-form-group">
+                <label htmlFor="edit-user-branches">Branch assignments</label>
 
                 <select
                   id="edit-user-branches"
@@ -472,7 +535,7 @@ const UserManagement = () => {
                   value={selectedUserBranches}
                   onChange={(event) => {
                     const branchIds = Array.from(
-                      event.target.selectedOptions
+                      event.target.selectedOptions,
                     ).map((option) => option.value);
 
                     setSelectedUserBranches(branchIds);
@@ -497,12 +560,26 @@ const UserManagement = () => {
                   : "branches selected"}
               </div>
 
+              <div className="user-aero-form-group">
+                <label htmlFor="edit-user-status">Account status</label>
+                <select
+                  id="edit-user-status"
+                  value={editIsActive ? "active" : "inactive"}
+                  onChange={(event) =>
+                    setEditIsActive(event.target.value === "active")
+                  }
+                >
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+
               <footer className="user-aero-modal-actions">
                 <button
                   className="user-aero-secondary-button"
                   type="button"
-                  onClick={closeBranchEditor}
-                  disabled={savingBranches}
+                  onClick={closeUserEditor}
+                  disabled={savingUser}
                 >
                   Cancel
                 </button>
@@ -511,11 +588,14 @@ const UserManagement = () => {
                   className="user-aero-modal-button"
                   type="button"
                   disabled={
-                    savingBranches || selectedUserBranches.length === 0
+                    savingUser ||
+                    !editName.trim() ||
+                    !editEmail.trim() ||
+                    selectedUserBranches.length === 0
                   }
-                  onClick={handleSaveBranches}
+                  onClick={handleUpdateUser}
                 >
-                  {savingBranches ? "Saving..." : "Save assignments"}
+                  {savingUser ? "Updating..." : "Update User"}
                 </button>
               </footer>
             </div>
